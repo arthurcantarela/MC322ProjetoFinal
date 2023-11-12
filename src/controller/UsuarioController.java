@@ -1,6 +1,8 @@
 package controller;
 
 import model.IUsuario;
+import model.Usuario;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,7 +14,7 @@ public class UsuarioController {
     }
 
     // Método para adicionar um novo usuário
-    public void adicionarUsuario(IUsuario usuario) {
+    public void adicionarUsuario(Usuario usuario) {
         usuarios.add(usuario);
         System.out.println("Usuário adicionado: " + usuario.getNome());
     }
