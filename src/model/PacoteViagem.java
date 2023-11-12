@@ -3,11 +3,11 @@ package model;
 import exceptions.ReservaIndisponivelException;
 
 public class PacoteViagem implements IPacoteViagem {
-    private IDestino destino;
+    private Destino destino;
     private double preco;
     private boolean disponivel;
 
-    public PacoteViagem(IDestino destino, double preco, boolean disponivel) {
+    public PacoteViagem(Destino destino, double preco, boolean disponivel) {
         this.destino = destino;
         this.preco = preco;
         this.disponivel = disponivel;
