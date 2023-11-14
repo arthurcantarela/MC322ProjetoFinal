@@ -1,11 +1,11 @@
 package model;
 
 public interface IDestino {
-    String getNome();
+	public String getNome();
 
-    String getDescricao();
+	public String getDescricao();
 
-    void setDescricao(String descricao);
+	public void setDescricao(String descricao);
 
-    CategoriaDestino getCategoria();
+	public CategoriaDestino getCategoria();
 }

@@ -25,7 +25,7 @@ public class Usuario implements IUsuario {
 
     // Implementação do método fazerReserva
     @Override
-    public void fazerReserva(IPacoteViagem pacote) throws ReservaIndisponivelException {
+    public void fazerReserva(PacoteViagem pacote) throws ReservaIndisponivelException {
         if (pacote.isDisponivel()) {
             pacote.reservar();
             System.out.println("Reserva feita com sucesso para o usuário: " + getNome());

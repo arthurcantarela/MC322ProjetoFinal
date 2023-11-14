@@ -7,5 +7,5 @@ public interface IUsuario {
 
     String getEmail();
 
-    void fazerReserva(IPacoteViagem pacote) throws ReservaIndisponivelException;
+    void fazerReserva(PacoteViagem pacote) throws ReservaIndisponivelException;
 }

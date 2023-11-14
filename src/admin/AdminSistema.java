@@ -1,11 +1,11 @@
 package admin;
 
-import model.IPacoteViagem;
+import model.PacoteViagem;
 import java.util.ArrayList;
 import java.util.List;
 
 public class AdminSistema implements IAdminSistema {
-    private List<IPacoteViagem> pacotes;
+    private List<PacoteViagem> pacotes;
 
     public AdminSistema() {
         this.pacotes = new ArrayList<>();
@@ -13,14 +13,14 @@ public class AdminSistema implements IAdminSistema {
 
     // Implementação do método adicionarPacote
     @Override
-    public void adicionarPacote(IPacoteViagem pacote) {
+    public void adicionarPacote(PacoteViagem pacote) {
         pacotes.add(pacote);
         System.out.println("Pacote adicionado: " + pacote);
     }
 
     // Implementação do método removerPacote
     @Override
-    public void removerPacote(IPacoteViagem pacote) {
+    public void removerPacote(PacoteViagem pacote) {
         if (pacotes.remove(pacote)) {
             System.out.println("Pacote removido: " + pacote);
         } else {
@@ -30,7 +30,7 @@ public class AdminSistema implements IAdminSistema {
 
     // Implementação do método editarPacote
     @Override
-    public void editarPacote(IPacoteViagem pacoteExistente, IPacoteViagem novoPacote) {
+    public void editarPacote(PacoteViagem pacoteExistente, PacoteViagem novoPacote) {
         int index = pacotes.indexOf(pacoteExistente);
         if (index != -1) {
             pacotes.set(index, novoPacote);
@@ -43,7 +43,7 @@ public class AdminSistema implements IAdminSistema {
     // Método para exibir todos os pacotes
     public void exibirPacotes() {
         System.out.println("Pacotes disponíveis:");
-        for (IPacoteViagem pacote : pacotes) {
+        for (PacoteViagem pacote : pacotes) {
             System.out.println(pacote);
         }
     }

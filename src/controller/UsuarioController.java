@@ -1,13 +1,12 @@
 package controller;
 
-import model.IUsuario;
 import model.Usuario;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class UsuarioController {
-    private List<IUsuario> usuarios;
+    private List<Usuario> usuarios;
 
     public UsuarioController() {
         this.usuarios = new ArrayList<>();
@@ -21,7 +20,7 @@ public class UsuarioController {
 
     // Método para listar usuários
     public void listarUsuarios() {
-        for (IUsuario usuario : usuarios) {
+        for (Usuario usuario : usuarios) {
             System.out.println(usuario);
         }
     }

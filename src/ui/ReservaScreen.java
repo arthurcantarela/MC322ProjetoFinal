@@ -7,7 +7,12 @@ import java.awt.event.ActionListener;
 import java.util.List;
 
 public class ReservaScreen extends JFrame {
-    public ReservaScreen(List<IPacoteViagem> pacotesDisponiveis) {
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	public ReservaScreen(List<IPacoteViagem> pacotesDisponiveis) {
         super("Reserva de Pacotes");
         setSize(400, 300);
         setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));

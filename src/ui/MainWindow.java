@@ -4,7 +4,12 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 
 public class MainWindow extends JFrame {
-    public MainWindow() {
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	public MainWindow() {
         super("Plataforma Digital de Turismo");
         setSize(400, 300);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

@@ -5,7 +5,12 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class LoginScreen extends JFrame {
-    public LoginScreen() {
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	public LoginScreen() {
         super("Login");
         setSize(300, 200);
         setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));

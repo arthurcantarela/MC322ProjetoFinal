@@ -15,7 +15,7 @@ public class PacoteViagem implements IPacoteViagem {
 
     // Implementação do método getDestino
     @Override
-    public IDestino getDestino() {
+    public Destino getDestino() {
         return destino;
     }
 

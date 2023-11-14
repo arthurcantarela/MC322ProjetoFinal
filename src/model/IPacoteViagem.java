@@ -3,13 +3,13 @@ package model;
 import exceptions.ReservaIndisponivelException;
 
 public interface IPacoteViagem {
-    IDestino getDestino();
+	public Destino getDestino();
 
-    double getPreco();
+	public double getPreco();
 
-    void setPreco(double preco);
+	public void setPreco(double preco);
 
-    boolean isDisponivel();
+	public boolean isDisponivel();
 
-    void reservar() throws ReservaIndisponivelException;
+	public void reservar() throws ReservaIndisponivelException;
 }
