@@ -1,16 +1,16 @@
 package model;
 
 public class Reserva {
-	private UsuarioBase reservante;
+	private Usuario reservante;
 	private PacoteViagem pacote;
 	
-	public Reserva (UsuarioBase usuario, PacoteViagem pacote){
+	public Reserva (Usuario usuario, PacoteViagem pacote){
 		this.pacote = pacote;
 		this.reservante = usuario;
 	}
 	
 	// geters ans seters
-	public UsuarioBase getReservante() {
+	public Usuario getReservante() {
 		return reservante;
 	}
 
@@ -18,7 +18,7 @@ public class Reserva {
 		return pacote;
 	}
 
-	public void setReservante(UsuarioBase reservante) {
+	public void setReservante(Usuario reservante) {
 		this.reservante = reservante;
 	}
 
