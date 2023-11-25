@@ -1,10 +1,9 @@
 package model;
 
-import exceptions.ReservaIndisponivelException;
-
 public class Usuario implements IUsuario {
     private String nome;
     private String email;
+    //lista de reservas
 
     public Usuario(String nome, String email) {
         this.nome = nome;
@@ -21,17 +20,6 @@ public class Usuario implements IUsuario {
     @Override
     public String getEmail() {
         return email;
-    }
-
-    // Implementação do método fazerReserva
-    @Override
-    public void fazerReserva(PacoteViagem pacote) throws ReservaIndisponivelException {
-        if (pacote.isDisponivel()) {
-            pacote.reservar();
-            System.out.println("Reserva feita com sucesso para o usuário: " + getNome());
-        } else {
-            throw new ReservaIndisponivelException("Reserva não pode ser feita. Pacote não está disponível.");
-        }
     }
 
     // Método toString para facilitar a visualização das informações do usuário
