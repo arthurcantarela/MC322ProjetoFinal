@@ -1,10 +1,10 @@
 package model;
 
-public class Reserva {
+public class Reserva implements IReserva {
 	private Usuario reservante;
 	private PacoteViagem pacote;
 	
-	public Reserva (Usuario usuario, PacoteViagem pacote){
+	public Reserva  (Usuario usuario, PacoteViagem pacote){
 		this.pacote = pacote;
 		this.reservante = usuario;
 	}
