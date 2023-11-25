@@ -16,7 +16,7 @@ public class ReservaController {
 	};
     
 	public static void printReservas() {
-		System.out.println("Reservas realizadas:");
+		System.out.println("Reservas armazenadas:");
 		for(Reserva reserva : reservas) {
 			System.out.println(reserva.toString());
 		}

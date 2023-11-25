@@ -30,7 +30,4 @@ public class Reserva {
 	public String toString() {
 		return "Reserva [reservante=" + reservante + ", pacote=" + pacote + "]";
 	}
-	
-
-	
 }
