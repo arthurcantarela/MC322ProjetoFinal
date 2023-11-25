@@ -3,7 +3,6 @@ package model;
 public class Usuario implements IUsuario {
     private String nome;
     private String email;
-    //lista de reservas
 
     public Usuario(String nome, String email) {
         this.nome = nome;
