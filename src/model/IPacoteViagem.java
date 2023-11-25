@@ -11,5 +11,6 @@ public interface IPacoteViagem {
 
 	public boolean isDisponivel();
 
-	public void reservar() throws ReservaIndisponivelException;
+    public void fazerReserva(UsuarioBase reservante) throws ReservaIndisponivelException;
+
 }

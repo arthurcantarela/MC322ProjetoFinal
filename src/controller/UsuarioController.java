@@ -1,27 +1,27 @@
 package controller;
 
-import model.Usuario;
+import model.UsuarioBase;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class UsuarioController {
-    private List<Usuario> usuarios;
+    private List<UsuarioBase> usuarioBases;
 
     public UsuarioController() {
-        this.usuarios = new ArrayList<>();
+        this.usuarioBases = new ArrayList<>();
     }
 
     // Método para adicionar um novo usuário
-    public void adicionarUsuario(Usuario usuario) {
-        usuarios.add(usuario);
-        System.out.println("Usuário adicionado: " + usuario.getNome());
+    public void adicionarUsuario(UsuarioBase usuarioBase) {
+        usuarioBases.add(usuarioBase);
+        System.out.println("Usuário adicionado: " + usuarioBase.getNome());
     }
 
     // Método para listar usuários
     public void listarUsuarios() {
-        for (Usuario usuario : usuarios) {
-            System.out.println(usuario);
+        for (UsuarioBase usuarioBase : usuarioBases) {
+            System.out.println(usuarioBase);
         }
     }
 }

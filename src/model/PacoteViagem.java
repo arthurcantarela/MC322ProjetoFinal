@@ -1,19 +1,51 @@
 package model;
 
+import java.time.LocalDate;
+
+import controller.ReservaController;
 import exceptions.ReservaIndisponivelException;
 
 public class PacoteViagem implements IPacoteViagem {
     private Destino destino;
     private double preco;
     private boolean disponivel;
+    private LocalDate dataInicio;
+    private LocalDate dataFim;
 
-    public PacoteViagem(Destino destino, double preco, boolean disponivel) {
+    public PacoteViagem(Destino destino, double preco, boolean disponivel, LocalDate dataInicio,
+    		LocalDate dataFim) {
         this.destino = destino;
         this.preco = preco;
         this.disponivel = disponivel;
+        this.dataFim = dataFim;
+        this.dataInicio = dataInicio;   
     }
 
-    // Implementação do método getDestino
+    // Implementação do método reservar
+    @Override
+    public void fazerReserva(UsuarioBase reservante) throws ReservaIndisponivelException {
+    	try {
+	        if (!this.disponivel) {
+	            throw new ReservaIndisponivelException("Pacote de viagem não está disponível para reserva.");
+	        }else{
+	        	Reserva reserva = new Reserva(reservante, this);	
+	        	ReservaController.getReservas().add(reserva);
+	        	this.disponivel = false;
+	        	System.out.println("Reserva de "+ this.toString()+ "para "+reservante.toString()+" realizada com sucesso!");
+	        }
+    	}
+    	catch(ReservaIndisponivelException e){
+    		System.err.println(e);
+    	}
+    }
+ 
+    @Override
+	public String toString() {
+		return "PacoteViagem [destino=" + destino + ", preco=" + preco + ", disponivel=" + disponivel + ", dataInicio="
+				+ dataInicio + ", dataFim=" + dataFim + "]";
+	}
+
+ // Implementação do método getDestino
     @Override
     public Destino getDestino() {
         return destino;
@@ -35,26 +67,5 @@ public class PacoteViagem implements IPacoteViagem {
     @Override
     public boolean isDisponivel() {
         return disponivel;
-    }
-
-    // Implementação do método reservar
-    @Override
-    public void reservar() throws ReservaIndisponivelException {
-        if (!disponivel) {
-            throw new ReservaIndisponivelException("Pacote de viagem não está disponível para reserva.");
-        }
-        // Aqui você pode adicionar lógica adicional para o processo de reserva.
-        // Por exemplo, atualizar o estado de disponibilidade do pacote.
-        disponivel = false;
-    }
-
-    // Método toString para facilitar a visualização das informações do pacote
-    @Override
-    public String toString() {
-        return "PacoteViagem{" +
-                "destino=" + destino +
-                ", preco=" + preco +
-                ", disponivel=" + disponivel +
-                '}';
     }
 }

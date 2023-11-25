@@ -1,19 +1,24 @@
 package controller;
 
-import model.PacoteViagem;
-import model.Usuario;
-import exceptions.ReservaIndisponivelException;
+import model.Reserva;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ReservaController {
+	private static List<Reserva> reservas = new ArrayList<>();
 
-    // Método para realizar uma reserva
-    public void realizarReserva(Usuario usuario, PacoteViagem pacote) {
-        try {
-            usuario.fazerReserva(pacote);
-            System.out.println("Reserva realizada com sucesso!");
-            throw new ReservaIndisponivelException("Reserva indisponível");
-        } catch (ReservaIndisponivelException e) {
-            System.out.println("Erro ao realizar reserva: " + e.getMessage());
-        }
-    }
+	public static List<Reserva> getReservas() {
+		return reservas;
+	}
+
+	public static void setReservas(List<Reserva> reservas) {
+		ReservaController.reservas = reservas;
+	};
+    
+	public static void printReservas() {
+		System.out.println("Reservas realizadas:");
+		for(Reserva reserva : reservas) {
+			System.out.println(reserva.toString());
+		}
+	}
 }
