@@ -31,10 +31,7 @@ public class ReservaController {
     		System.err.println(e);
     	}
     }
- 
-	
 	public static void setReservas(List<Reserva> reservas) {
 		ReservaController.reservas = reservas;
 	};
-
 }

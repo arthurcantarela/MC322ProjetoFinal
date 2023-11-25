@@ -9,7 +9,7 @@ public class PacoteViagem implements IPacoteViagem {
     private LocalDate dataInicio;
     private LocalDate dataFim;
 
-    public PacoteViagem(Destino destino, double preco, boolean disponivel, 
+    public PacoteViagem(Destino destino, double preco, 
     		LocalDate dataInicio, LocalDate dataFim) {
         this.destino = destino;
         this.preco = preco;
