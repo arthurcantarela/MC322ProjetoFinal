@@ -3,30 +3,39 @@ package model;
 import java.time.LocalDate;
 
 public class PacoteViagem implements IPacoteViagem {
-    private Destino destino;
+    private IDestino destino;
     private double preco;
-    private Usuario usuario;
+    private IUsuario usuario;
     private LocalDate dataInicio;
     private LocalDate dataFim;
 
-    public PacoteViagem(Destino destino, double preco, boolean disponivel, 
-    		LocalDate dataInicio, LocalDate dataFim) {
+    public PacoteViagem(IDestino destino, double preco,
+            LocalDate dataInicio, LocalDate dataFim) {
         this.destino = destino;
         this.preco = preco;
-        this.usuario = null;
         this.dataFim = dataFim;
         this.dataInicio = dataInicio;
+        this.usuario = null;
+    }
+
+    public PacoteViagem(IDestino destino, double preco,
+            LocalDate dataInicio, LocalDate dataFim, IUsuario usuario) {
+        this.destino = destino;
+        this.preco = preco;
+        this.dataFim = dataFim;
+        this.dataInicio = dataInicio;
+        this.usuario = usuario;
     }
 
     @Override
-	public String toString() {
-		return "PacoteViagem [destino=" + destino + ", preco=" + preco + ", usuario=" + usuario + ", dataInicio="
-				+ dataInicio + ", dataFim=" + dataFim + "]";
-	}
+    public String toString() {
+        return "PacoteViagem [destino=" + destino + ", preco=" + preco + ", usuario=" + usuario + ", dataInicio="
+                + dataInicio + ", dataFim=" + dataFim + "]";
+    }
 
- // Implementação do método getDestino
+    // Implementação do método getDestino
     @Override
-    public Destino getDestino() {
+    public IDestino getDestino() {
         return destino;
     }
 
@@ -42,40 +51,47 @@ public class PacoteViagem implements IPacoteViagem {
         this.preco = preco;
     }
 
-	public Usuario getUsuario() {
-		return usuario;
-	}
+    @Override
+    public IUsuario getUsuario() {
+        return usuario;
+    }
 
-	public LocalDate getDataInicio() {
-		return dataInicio;
-	}
+    @Override
+    public LocalDate getDataInicio() {
+        return dataInicio;
+    }
 
-	public LocalDate getDataFim() {
-		return dataFim;
-	}
+    @Override
 
-	public void setDestino(Destino destino) {
-		this.destino = destino;
-	}
+    public LocalDate getDataFim() {
+        return dataFim;
+    }
 
-	public void setUsuario(Usuario usuario) {
-		this.usuario = usuario;
-	}
+    @Override
+    public void setDestino(Destino destino) {
+        this.destino = destino;
+    }
 
-	public void setDataInicio(LocalDate dataInicio) {
-		this.dataInicio = dataInicio;
-	}
+    @Override
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
+    }
 
-	public void setDataFim(LocalDate dataFim) {
-		this.dataFim = dataFim;
-	}
+    @Override
+    public void setDataInicio(LocalDate dataInicio) {
+        this.dataInicio = dataInicio;
+    }
 
-	@Override
-	public boolean isDisponivel() {
-		if(this.usuario!=null) {
-			return false;
-		}
-		else
-			return true;
-	}
+    @Override
+    public void setDataFim(LocalDate dataFim) {
+        this.dataFim = dataFim;
+    }
+
+    @Override
+    public boolean isDisponivel() {
+        if (this.usuario != null) {
+            return false;
+        } else
+            return true;
+    }
 }
