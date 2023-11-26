@@ -1,10 +1,12 @@
 package ui;
 
 
+import java.time.LocalDate;
 import java.util.*;
 import java.util.ArrayList;
 import model.PacoteViagem;
 import model.Destino;
+import model.IDestino;
 import model.CategoriaDestino;
 
 public class Menu {
@@ -23,10 +25,10 @@ public class Menu {
         Destino destino = new Destino("Tokyo", "Nice Place", CategoriaDestino.CULTURAL);
         Destino destino2 = new Destino("Las Vegas", "Cassino", CategoriaDestino.AVENTURA);
         
-        PacoteViagem pacote = new PacoteViagem(destino,1800,true);
-        PacoteViagem pacote2 = new PacoteViagem(destino,2500,true);
-        PacoteViagem pacote3 = new PacoteViagem(destino2,3600,true);
-        PacoteViagem pacote4 = new PacoteViagem(destino2,5500,false);
+        PacoteViagem pacote = new PacoteViagem(destino, 1800, LocalDate.now(), LocalDate.now()); 
+        PacoteViagem pacote2 = new PacoteViagem(destino,2500, LocalDate.now(), LocalDate.now()); 
+        PacoteViagem pacote3 = new PacoteViagem(destino2,3600, LocalDate.now(), LocalDate.now()); 
+        PacoteViagem pacote4 = new PacoteViagem(destino2,5500, LocalDate.now(), LocalDate.now()); 
         
         pacotes.add(pacote);
         pacotes.add(pacote2);
@@ -252,7 +254,7 @@ public class Menu {
     }
     
     private static void imprimirPacote(PacoteViagem pacote) {
-    	System.out.println("Categoria: " + pacote.getCategoria());
+    	System.out.println("Categoria: " + pacote.getDestino().getCategoria());
         System.out.println("Destino: " + pacote.getDestino().getNome());
         System.out.println("Preço: R$ " + pacote.getPreco());
         System.out.println("Data de Início: " + pacote.getDataInicio());
@@ -387,7 +389,7 @@ public class Menu {
         
         System.out.println("\n--- Pacotes Disponíveis - Categoria " + categoria + " ---");
         for (PacoteViagem pacote : pacotes) {
-            if (pacote.getCategoria().equals(categoria) && pacote.isDisponivel()) {
+            if (pacote.getDestino().getCategoria().equals(categoria) && pacote.isDisponivel()) {
             	j++;
             	System.out.println("Pacote " + j + ": ");
             	imprimirPacote(pacote);

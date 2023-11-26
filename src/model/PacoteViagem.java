@@ -62,7 +62,6 @@ public class PacoteViagem implements IPacoteViagem {
     }
 
     @Override
-
     public LocalDate getDataFim() {
         return dataFim;
     }
