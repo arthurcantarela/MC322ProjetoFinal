@@ -1,6 +1,7 @@
 package controller;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -10,7 +11,7 @@ import java.util.UUID;
 
 import model.*;
 
-public class DestinoController {
+public class DestinoController implements IDestinoController {
 	private static Map<UUID,IDestino> destinos = new HashMap<>();
 	
 	public DestinoController() {
@@ -22,11 +23,11 @@ public class DestinoController {
     	
     }
     // Método para listar usuários
-    public static List<IDestino> listarDestinos() {
+    public List<IDestino> listarDestinos() {
     	 return new ArrayList<>(destinos.values());
     }
     
-    public static IDestino getDestinoPorNome(String destino) {
+    public IDestino getDestinoPorNome(String destino) {
     	List<IDestino> lista = listarDestinos();
     	IDestino destEncontrado = null;
     	
@@ -37,7 +38,7 @@ public class DestinoController {
     	return destEncontrado;    	
     }
     
-	public List<IDestino> destinosDisponiveis(PacoteController pacoteController) {
+	public List<IDestino> destinosDisponiveis(IPacoteController pacoteController) {
 		//Set para não repetir os destinos disponíveis
 		Set<IDestino> destinosExibidos = new HashSet<>();
 		
@@ -46,7 +47,7 @@ public class DestinoController {
 		List<IDestino> listaAux = new ArrayList<>();
 		
 		int i = 0;
-		for (PacoteViagem pacote : pacoteController.listarPacotes() ) {
+		for (IPacoteViagem pacote : pacoteController.listarPacotes() ) {
         	if(pacote.isDisponivel() && destinosExibidos.add(pacote.getDestino())) {
         		listaAux.add(i, pacote.getDestino());
         		i ++;	
@@ -54,6 +55,21 @@ public class DestinoController {
         }
 		return listaAux;
 	}
+	public List<CategoriaDestino> categoriasDisponiveis() {
+		return Arrays.asList(CategoriaDestino.values());
+	}
+	@Override
+	public void adicionarDestino(IDestino destino) {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public void removerDestino(IDestino destino) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	 
     	
     
 }

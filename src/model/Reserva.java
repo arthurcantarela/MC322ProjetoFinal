@@ -1,28 +1,28 @@
 package model;
 
 public class Reserva implements IReserva {
-	private Usuario reservante;
-	private PacoteViagem pacote;
+	private IUsuario reservante;
+	private IPacoteViagem pacote;
 	
-	public Reserva  (Usuario usuario, PacoteViagem pacote){
+	public Reserva  (IUsuario usuario, IPacoteViagem pacote){
 		this.pacote = pacote;
 		this.reservante = usuario;
 	}
 	
 	// geters ans seters
-	public Usuario getReservante() {
+	public IUsuario getReservante() {
 		return reservante;
 	}
 
-	public PacoteViagem getPacote() {
+	public IPacoteViagem getPacote() {
 		return pacote;
 	}
 
-	public void setReservante(Usuario reservante) {
+	public void setReservante(IUsuario reservante) {
 		this.reservante = reservante;
 	}
 
-	public void setPacote(PacoteViagem pacote) {
+	public void setPacote(IPacoteViagem pacote) {
 		this.pacote = pacote;
 	}
 
