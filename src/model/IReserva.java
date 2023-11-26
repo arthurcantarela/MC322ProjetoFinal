@@ -1,11 +1,11 @@
 package model;
 
 public interface IReserva {
-	public Usuario getReservante();
+	public IUsuario getReservante();
 
-	public PacoteViagem getPacote();
+	public IPacoteViagem getPacote();
 
-	public void setReservante(Usuario reservante);
+	public void setReservante(IUsuario reservante);
 
-	public void setPacote(PacoteViagem pacote);
+	public void setPacote(IPacoteViagem pacote);
 }

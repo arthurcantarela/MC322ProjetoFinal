@@ -8,14 +8,20 @@ import java.util.Set;
 import model.*;
 
 public class PacoteController implements IPacoteController {
-	private static List<PacoteViagem> pacotes = new ArrayList<>();
+	@Override
+	public void removerPacote(IPacoteViagem pacote) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	private static List<IPacoteViagem> pacotes = new ArrayList<>();
 	
 	//Testar
-	public List<PacoteViagem> buscaPacotesDisponiveisPorDestino(List<IDestino> destinos){
+	public List<IPacoteViagem> buscarPacotesDisponiveis(List<IDestino> destinos){
 		//A lista de destinos não pode haver repetição
-		List<PacoteViagem> pacotesEncontrados = new ArrayList<>();
+		List<IPacoteViagem> pacotesEncontrados = new ArrayList<>();
 		for(IDestino destino: destinos) {
-			for(PacoteViagem pacote: pacotes) {
+			for(IPacoteViagem pacote: pacotes) {
 				if(pacote.getDestino() == destino && pacote.isDisponivel()) {
 					pacotesEncontrados.add(pacote);
 				}
@@ -25,10 +31,10 @@ public class PacoteController implements IPacoteController {
 	}
 	
 	//Polimorfismo
-	public List<PacoteViagem> buscaPacotesDisponiveisPorDestino(IDestino destino){
+	public List<IPacoteViagem> buscarPacotesDisponiveis(IDestino destino){
 		//A lista de destinos não pode haver repetição
-		List<PacoteViagem> pacotesEncontrados = new ArrayList<>();
-		for(PacoteViagem pacote: pacotes) {
+		List<IPacoteViagem> pacotesEncontrados = new ArrayList<>();
+		for(IPacoteViagem pacote: pacotes) {
 			if(pacote.getDestino() == destino && pacote.isDisponivel()) {
 				pacotesEncontrados.add(pacote);
 			}
@@ -36,9 +42,32 @@ public class PacoteController implements IPacoteController {
 		return pacotesEncontrados;
 	}
 	
-	public List<PacoteViagem> listarPacotes() {
+	public List<IPacoteViagem> buscarPacotesDisponiveis(double precoMaximo) {
+		List <IPacoteViagem> pacotesEncontrados = new ArrayList<>();
+        for (IPacoteViagem pacote : pacotes) {
+            if (pacote.getPreco() <= precoMaximo && pacote.isDisponivel()) {
+            	pacotesEncontrados.add(pacote);
+            }
+        }
+        return pacotesEncontrados;
+	}
+	
+	public List<IPacoteViagem> buscarPacotesDisponiveis (CategoriaDestino categoria) {
+		List <IPacoteViagem> pacotesEncontrados = new ArrayList<>();
+        for (IPacoteViagem pacote : pacotes) {
+        	if (pacote.getDestino().getCategoria().equals(categoria) && pacote.isDisponivel()) {
+            	pacotesEncontrados.add(pacote);
+            }
+        }
+        return pacotesEncontrados;
+	}
+	
+	public List<IPacoteViagem> listarPacotes() {
 		return pacotes;
 	}
 	
+	public void adicionarPacote(IPacoteViagem pacote) {
+		//todo
+	}
 
 }

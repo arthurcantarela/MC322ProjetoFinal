@@ -7,7 +7,13 @@ public class PacoteViagem implements IPacoteViagem {
     private double preco;
     private IUsuario usuario;
     private LocalDate dataInicio;
-    private LocalDate dataFim;
+    @Override
+	public void setDestino(IDestino destino) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	private LocalDate dataFim;
 
     public PacoteViagem(IDestino destino, double preco,
             LocalDate dataInicio, LocalDate dataFim) {
@@ -66,13 +72,10 @@ public class PacoteViagem implements IPacoteViagem {
         return dataFim;
     }
 
-    @Override
-    public void setDestino(Destino destino) {
-        this.destino = destino;
-    }
+    
 
     @Override
-    public void setUsuario(Usuario usuario) {
+    public void setUsuario(IUsuario usuario) {
         this.usuario = usuario;
     }
 

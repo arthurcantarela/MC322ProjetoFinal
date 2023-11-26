@@ -3,14 +3,12 @@ package view;
 import java.util.ArrayList;
 import java.util.List;
 
-import controller.PacoteController;
-import model.IDestino;
-import model.IPacoteViagem;
+import model.*;
 
 public class PacoteView implements IPacoteView{
 
 	@Override
-    public void imprimirPacote(IPacoteViagem pacote) {
+    public void visualizarPacote(IPacoteViagem pacote) {
     	System.out.println("Destino: " + pacote.getDestino().getNome());
     	System.out.println("Categoria: " + pacote.getDestino().getCategoria());
         System.out.println("Preço: R$ " + pacote.getPreco());
@@ -19,17 +17,13 @@ public class PacoteView implements IPacoteView{
         System.out.println();
     }
 	
-	public List<IPacoteViagem> selecionarPacotesDisponiveis(IDestino destinoSelecionado, PacoteController pacoteController) {
+	public void visualizarPacotesDisponiveis(List <IPacoteViagem> pacotesDisponiveis) {
 		int j = 0;
-		List<IPacoteViagem> pacotes = new ArrayList<>();
-        System.out.println("\n--- Pacotes Disponíveis - Destino " + destinoSelecionado.getNome() + " ---");
-        for (IPacoteViagem pacote : pacoteController.buscaPacotesDisponiveisPorDestino(destinoSelecionado)) {
+        for (IPacoteViagem pacote : pacotesDisponiveis ) {
         	j++;
         	System.out.println("Pacote " + j + ": ");
-        	imprimirPacote(pacote);
-        	pacotes.add(pacote);
+        	visualizarPacote(pacote);
         }
-        return pacotes;
 	}
 	
 }

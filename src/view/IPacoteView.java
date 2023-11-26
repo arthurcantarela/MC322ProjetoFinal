@@ -7,7 +7,8 @@ import model.IDestino;
 import model.IPacoteViagem;
 
 public interface IPacoteView {
-	public void imprimirPacote(IPacoteViagem pacote);
+	public void visualizarPacote(IPacoteViagem pacote);
 	
-	public List<IPacoteViagem> selecionarPacotesDisponiveis(IDestino destinoSelecionado, PacoteController pacoteController);
+	public void visualizarPacotesDisponiveis(List <IPacoteViagem> pacotesDisponiveis);
+	
 }

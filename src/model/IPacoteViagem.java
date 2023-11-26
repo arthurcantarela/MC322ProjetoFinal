@@ -17,9 +17,9 @@ public interface IPacoteViagem {
 
 	public LocalDate getDataFim();
 
-	public void setDestino(Destino destino);
+	public void setDestino(IDestino destino);
 
-	public void setUsuario(Usuario usuario);
+	public void setUsuario(IUsuario usuario);
 
 	public void setDataInicio(LocalDate dataInicio);
 

@@ -1,22 +1,20 @@
 package controller;
 
-import model.PacoteViagem;
-import model.Reserva;
-import model.Usuario;
+import model.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import exceptions.ReservaIndisponivelException;
 
-public class ReservaController {
+public class ReservaController implements IReservaController{
 	private static List<Reserva> reservas = new ArrayList<>();
 
 	public static List<Reserva> getReservas() {
 		return reservas;
 	}
 	 // Implementação do método reservar
-    public static void ReservarPacote(Usuario reservante, PacoteViagem pacote) throws ReservaIndisponivelException {
+    public void reservarPacote(IUsuario reservante, IPacoteViagem pacote) throws ReservaIndisponivelException {
     	try {
 	        if (!pacote.isDisponivel()) {
 	            throw new ReservaIndisponivelException("Pacote de viagem não está disponível para reserva.");
