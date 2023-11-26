@@ -9,7 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class UsuarioController{
+public class UsuarioController implements IUsuarioController{
     private Map<String,IUsuario> usuarios = new HashMap<>();
 
     public UsuarioController() {
@@ -23,5 +23,10 @@ public class UsuarioController{
     // Método para listar usuários
     public List<IUsuario> listarUsuarios() {
     	 return new ArrayList<>(usuarios.values());
+    }
+    
+    
+	public Map<String,IUsuario> mapUsuarios (){
+    	return usuarios;
     }
 }

@@ -1,5 +1,6 @@
 package model;
 
+import java.util.List;
 import java.util.UUID;
 
 public interface IDestino {
@@ -12,4 +13,5 @@ public interface IDestino {
 	public void setDescricao(String descricao);
 
 	public CategoriaDestino getCategoria();
+	
 }

@@ -1,23 +1,30 @@
 package main;
 
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.Map;
 import java.util.*;
-import java.util.ArrayList;
+
 import model.*;
 import controller.*;
+import exceptions.ReservaIndisponivelException;
 import view.*;
 
 public class Menu {
 
     private static final Scanner scanner = new Scanner(System.in);
     //private static final Map<String, String> usuarios = new HashMap<>();
-    private static final Map<String, IUsuario> usuarios = new HashMap<>();
+    //private static final Map<String, IUsuario> usuarios = new HashMap<>();
     public static List<PacoteViagem> pacotes = new ArrayList<>();
-    public static PacoteView pacoteView = new PacoteView();
-    public static DestinoView destinoView = new DestinoView();
-    public static PacoteController pacoteController = new PacoteController();
-    public static DestinoController destinoController = new DestinoController();
+    public static IPacoteView pacoteView = new PacoteView();
+    public static IDestinoView destinoView = new DestinoView();
+    public static IPacoteController pacoteController = new PacoteController();
+    public static IDestinoController destinoController = new DestinoController();
+    public static IReservaController reservaController = new ReservaController();
+    public static IUsuarioController usuarioController = new UsuarioController();
     
     //private static final List<Reserva> reservas = new ArrayList<>();
     private static IUsuario usuarioLogado;    
@@ -63,8 +70,8 @@ public class Menu {
             }
 
             if (usuarioLogado != null) {
-                if (usuarioLogado.equals("admin")) {
-                    //menuOpcoesAdministrativas();
+                if (usuarioLogado.getNome().equals("1")) {
+                    menuOpcoesAdministrativas();
                 } else {
                     menuOpcoesUsuario();
                 }
@@ -77,6 +84,7 @@ public class Menu {
 
     private static void fazerLogin() {
         System.out.print("Digite o email: ");
+        Map<String,IUsuario> usuarios = usuarioController.mapUsuarios();
         String email = scanner.next();
         
         //System.out.print("Digite a senha: ");
@@ -93,37 +101,7 @@ public class Menu {
         }
     }
 
-    private static void fazerCadastro() {
-        System.out.println("\n----- Cadastro -----");
-        System.out.print("Digite seu nome: ");
-        
-        String nome = scanner.next();
 
-        System.out.print("Digite uma email: ");
-        String email = scanner.next();
-        // Verifica se o Email já existe
-        if (usuarios.containsKey(email)) {
-            System.out.println("Email já existente. Tente um Email diferente.");
-            return;
-        }
-        System.out.print("Repita o email: ");
-        String repetirEmail = scanner.next();
-
-        // Verifica se os emails coincidem
-        if (!email.equals(repetirEmail)) {
-            System.out.println("Os emails não coincidem. Por favor, corrija.");
-            return;
-        }
-        //COMO DEVE SER
-        //adicionarUsuario(nome,email);
-        
-        //COMO ESTA SENDO
-        // Adiciona o novo usuário ao mapa
-        Usuario usuario = new Usuario(nome,email);
-        usuarios.put(email, usuario);
-
-        System.out.println("Cadastro realizado com sucesso!");
-    }
 
     private static void menuOpcoesUsuario() {
         int opcao;
@@ -199,11 +177,8 @@ public class Menu {
 
         switch (opcao) {
             case 1:
-                destinoView.visualizarDestinosDisponiveis(destinoController, pacoteController, scanner);
+                visualizarDestinosDisponiveisMenu();
                 break;
-           // case 2:
-           //     inserirDestino();
-           //     break;
             case 0:
                 System.out.println("Voltando à busca por pacote.");
                 break;
@@ -211,84 +186,6 @@ public class Menu {
                 System.out.println("Opção inválida. Tente novamente.");
         }
     }
-
-//    private static void visualizarDestinosDisponiveis() {
-//
-//        System.out.println("\n--- Destinos Disponíveis ---");
-//        int i = 0;
-//        int j = 0;
-//        Set<IDestino> destinosExibidos = new HashSet<>();
-//        List<String> listaAux = new ArrayList<>();
-//        List<PacoteViagem> pacoteSel = new ArrayList<>();
-//        for (PacoteViagem pacote : pacotes) {
-//        	if(pacote.isDisponivel() && destinosExibidos.add(pacote.getDestino())) {
-//        		listaAux.add(i, pacote.getDestino().getNome());
-//        		i ++;
-//        		System.out.println(i+ " - " + pacote.getDestino().getNome() + " - " + pacote.getDestino().getCategoria());
-//        	}
-//        }
-//        System.out.println("Escolha o destino desejado: ");
-//        
-//        int opcao = scanner.nextInt();
-//        
-//        System.out.println("\n--- Pacotes Disponíveis - Destino " + listaAux.get(opcao-1) + " ---");
-//        for (PacoteViagem pacote : pacotes) {
-//            if (pacote.getDestino().getNome().equals(listaAux.get(opcao-1)) && pacote.isDisponivel()) {
-//            	j++;
-//            	System.out.println("Pacote " + j + ": ");
-//            	imprimirPacote(pacote);
-//            	pacoteSel.add(pacote);
-//            }
-//        }
-//        oferecerReserva(pacoteSel);
-//    }
-        
-        
-    
-    private static void oferecerReserva(List<PacoteViagem> pacotesSel) {
-    	
-    	System.out.println("Selecione um Pacote para Reserva (ou volte ao Menu selecionando 0)");
-        int opcao = scanner.nextInt();
-        if(opcao != 0) {
-        	//reservaPacote(pacotesSel.get(opcao-1));
-        	System.out.println("Pacote para o usuário " + usuarioLogado + " com destino a " + pacotesSel.get(opcao-1).getDestino().getNome() + " reservado com sucesso!");
-        } 
-        return;
-    }
-    
-    private static void imprimirPacote(PacoteViagem pacote) {
-    	System.out.println("Destino: " + pacote.getDestino().getNome());
-    	System.out.println("Categoria: " + pacote.getDestino().getCategoria());
-        System.out.println("Preço: R$ " + pacote.getPreco());
-        System.out.println("Data de Início: " + pacote.getDataInicio());
-        System.out.println("Data de Fim: " + pacote.getDataFim());
-        System.out.println();
-    }
-        // ...
-    
-
-//    private static void inserirDestino() {
-//        System.out.print("Digite o destino desejado: ");
-//        String destino = scanner.next();
-//
-//        // Adicione aqui a lógica para inserir um novo destino
-//        // ...
-//        System.out.println("Buscando destino ...");
-//        if(pacotes.)
-//        System.out.println("\n--- Pacotes Disponíveis - Destino " + destino + " ---");
-//        for (PacoteViagem pacote : pacotes) {
-//            if (pacote.getDestino().getNome().equals(destino)) {
-//                System.out.println("Categoria: " + pacote.getCategoria());
-//                System.out.println("Destino: " + pacote.getDestino().getNome());
-//                System.out.println("Preço: R$ " + pacote.getPreco());
-//                System.out.println("Data de Início: " + pacote.getDataInicio());
-//                System.out.println("Data de Fim: " + pacote.getDataFim());
-//                System.out.println();
-//            }
-//        }
-//        //buscarDestinoCadastrado();
-//        
-//    }
 
     private static void procurarPorCategoria() {
         System.out.println("----- Procurar por Categoria -----");
@@ -305,8 +202,7 @@ public class Menu {
                 exibirPacotesPorCategoria(CategoriaDestino.AVENTURA);
                 break;
             case 2:
-                exibirPacotesPorCategoria(CategoriaDestino.PRAIA);
-                exibirPacotesPorCategoria(CategoriaDestino.MONTANHA);
+                exibirPacotesPorCategoria(CategoriaDestino.RELAXAMENTO);
                 break;
             case 3:
                 exibirPacotesPorCategoria(CategoriaDestino.CULTURAL);
@@ -318,89 +214,559 @@ public class Menu {
                 System.out.println("Opção inválida. Tente novamente.");
         }
     }
+    
+    private static void visualizarDestinosDisponiveisMenu() {
+    	List<IDestino> destinosDisponiveis = destinoController.destinosDisponiveis(pacoteController);
+    	
+    	System.out.println("\n--- Destinos Disponíveis ---");
+    	
+    	destinoView.visualizarDestinosDisponiveis(destinosDisponiveis);
+    	
+        System.out.println("Escolha o destino desejado: ");
+        
+        int opcao = scanner.nextInt();
+        
+        IDestino destinoSelecionado = destinosDisponiveis.get(opcao-1);
+        List<IPacoteViagem> pacotesDisponiveis = pacoteController.buscarPacotesDisponiveis(destinoSelecionado);
+        
+        System.out.println("\n--- Pacotes Disponíveis - Destino " + destinoSelecionado.getNome() + " ---");
+        pacoteView.visualizarPacotesDisponiveis(pacotesDisponiveis);
+        
+        System.out.println("Selecione um Pacote para Reserva (ou volte ao Menu selecionando 0)");
+        
+        //todo - implementar exceção de quando o usuario colocar um numero não valido para acessar o pacote.
+        opcao = scanner.nextInt();
+        IPacoteViagem pacoteSelecionado = pacotesDisponiveis.get(opcao-1);
+        if(opcao != 0) {
+        	try {
+				reservaController.reservarPacote(usuarioLogado, pacoteSelecionado);
+				System.out.println("Pacote para o usuário " + usuarioLogado + " com destino a " + pacotesDisponiveis.get(opcao-1).getDestino().getNome() + " reservado com sucesso!");
+			} catch (ReservaIndisponivelException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+        } 
+    }
 
     private static void procurarPorPrecoMaximo() {
         System.out.print("Digite o preço máximo desejado: ");
         double precoMaximo = scanner.nextDouble();
-        int j = 0;
-        List<PacoteViagem> pacoteSel = new ArrayList<>();
+        List<IPacoteViagem> pacotesDisponiveis = pacoteController.buscarPacotesDisponiveis(precoMaximo);
         
         System.out.println("\n--- Pacotes Disponíveis - Preço Máximo " + precoMaximo + " ---");
-        for (PacoteViagem pacote : pacotes) {
-            if (pacote.getPreco() <= precoMaximo && pacote.isDisponivel()) {
-            	j++;
-            	System.out.println("Pacote " + j + ": ");
-            	imprimirPacote(pacote);
-            	pacoteSel.add(pacote);
-            }
+        
+        pacoteView.visualizarPacotesDisponiveis(pacotesDisponiveis);
+        
+        System.out.println("Selecione um Pacote para Reserva (ou volte ao Menu selecionando 0)");
+        
+        int opcao = scanner.nextInt();
+        IPacoteViagem pacoteSelecionado = pacotesDisponiveis.get(opcao-1);
+        if(opcao != 0) {
+        	try {
+				reservaController.reservarPacote(usuarioLogado, pacoteSelecionado);
+				System.out.println("Pacote para o usuário " + usuarioLogado + " com destino a " + pacotesDisponiveis.get(opcao-1).getDestino().getNome() + " reservado com sucesso!");
+			} catch (ReservaIndisponivelException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
         }
-        oferecerReserva(pacoteSel);
+        
 
     }
 
-    private static void exibirOfertas() {
-        System.out.println("\n----- Ofertas -----");
-        // Adicione aqui a lógica para exibir as ofertas disponíveis
-        // ...
-
-        // Exemplo de exibição de ofertas
-        System.out.println("1 - Oferta A");
-        System.out.println("2 - Oferta B");
-        System.out.println("3 - Oferta C");
-        System.out.print("Escolha uma oferta para mais detalhes (ou 0 para voltar): ");
-        int escolha = scanner.nextInt();
-
-        switch (escolha) {
-            case 1:
-                System.out.println("Detalhes da Oferta A");
-                break;
-            case 2:
-                System.out.println("Detalhes da Oferta B");
-                break;
-            case 3:
-                System.out.println("Detalhes da Oferta C");
-                break;
-            case 0:
-                System.out.println("Voltando ao menu principal.");
-                break;
-            default:
-                System.out.println("Opção inválida. Voltando ao menu principal.");
-        }
-    }
-
-//    private static void visualizarReservas() {
-//        System.out.println("\n----- Suas Reservas -----");
-//        for (Reserva reserva : reservas) {
-//            if (reserva.getUsuario().equals(usuarioLogado)) {
-//                System.out.println("Reserva " + reserva.getId() + ":");
-//                System.out.println("Categoria: " + reserva.getCategoria());
-//                System.out.println("Destino: " + reserva.getDestino());
-//                System.out.println("Preço: R$ " + reserva.getPreco());
-//                System.out.println("Data de Início: " + reserva.getDataInicio());
-//                System.out.println("Data de Fim: " + reserva.getDataFim());
-//                System.out.println();
-//            }
-//        }
-//
-//        // Adicione aqui a lógica para permitir que o usuário altere ou desista das reservas
-//        // ...
-//    }
 
     private static void exibirPacotesPorCategoria(CategoriaDestino categoria) {
     	int j = 0;
-        List<PacoteViagem> pacoteSel = new ArrayList<>();
+        List<IPacoteViagem> pacotesDisponiveis = pacoteController.buscarPacotesDisponiveis(categoria);
         
         System.out.println("\n--- Pacotes Disponíveis - Categoria " + categoria + " ---");
-        for (PacoteViagem pacote : pacotes) {
-            if (pacote.getDestino().getCategoria().equals(categoria) && pacote.isDisponivel()) {
-            	j++;
-            	System.out.println("Pacote " + j + ": ");
-            	imprimirPacote(pacote);
-            	pacoteSel.add(pacote);
-            }
-        }
-        oferecerReserva(pacoteSel);
-   }
         
+        pacoteView.visualizarPacotesDisponiveis(pacotesDisponiveis);
+        
+        System.out.println("Selecione um Pacote para Reserva (ou volte ao Menu selecionando 0)");
+        
+        int opcao = scanner.nextInt();
+        IPacoteViagem pacoteSelecionado = pacotesDisponiveis.get(opcao-1);
+        if(opcao != 0) {
+        	try {
+				reservaController.reservarPacote(usuarioLogado, pacoteSelecionado);
+				System.out.println("Pacote para o usuário " + usuarioLogado + " com destino a " + pacotesDisponiveis.get(opcao-1).getDestino().getNome() + " reservado com sucesso!");
+			} catch (ReservaIndisponivelException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+        } 
+   }
+
+
+private static void exibirOfertas() {
+    System.out.println("\n----- Ofertas -----");
+    // Adicione aqui a lógica para exibir as ofertas disponíveis
+    // ...
+
+    // Exemplo de exibição de ofertas
+    System.out.println("1 - Oferta A");
+    System.out.println("2 - Oferta B");
+    System.out.println("3 - Oferta C");
+    System.out.print("Escolha uma oferta para mais detalhes (ou 0 para voltar): ");
+    int escolha = scanner.nextInt();
+
+    switch (escolha) {
+        case 1:
+            System.out.println("Detalhes da Oferta A");
+            break;
+        case 2:
+            System.out.println("Detalhes da Oferta B");
+            break;
+        case 3:
+            System.out.println("Detalhes da Oferta C");
+            break;
+        case 0:
+            System.out.println("Voltando ao menu principal.");
+            break;
+        default:
+            System.out.println("Opção inválida. Voltando ao menu principal.");
+    	}
+	}
+
+
+public static void menuOpcoesAdministrativas(){
+	int escolha;
+	do {
+		exibirMenu();
+	    // Ler a escolha do usuário
+		escolha = scanner.nextInt();
+	    scanner.nextLine(); // Consumir a quebra de linha após o número
+
+	    // Executar a opção escolhida
+	    switch (escolha) {
+	        case 1:
+	            gerenciarDestinos();
+	            break;
+	        case 2:
+	            gerenciarPacotes();
+	            break;
+	        case 3:
+	            gerenciarUsuarios();
+	            break;
+	        case 0:
+	            System.out.println("Saindo do Menu Administrativo. Até mais!");
+	            break;
+	        default:
+	            System.out.println("Opção inválida. Tente novamente.");
+	    }
+	} while(escolha != 0);
+	
+} 
+
+
+
+private static void exibirMenu() {
+    System.out.println("\n----- Menu Administrativo -----");
+    System.out.println("1 - Gerenciar Destinos");
+    System.out.println("2 - Gerenciar Pacotes");
+    System.out.println("3 - Gerenciar Usuarios");
+    System.out.println("0 - Sair");
+    System.out.print("Escolha uma opção: ");
+}
+
+private static void gerenciarDestinos() {
     
+    int opcao;
+
+    do {
+        System.out.println("\n----- Gerenciar Destinos -----");
+        System.out.println("1 - Inserir Destino");
+        System.out.println("2 - Editar Destino");
+        System.out.println("3 - Remover Destino");
+        System.out.println("0 - Voltar ao Menu Administrativo");
+        System.out.print("Escolha uma opção: ");
+        opcao = scanner.nextInt();
+        scanner.nextLine(); // Consumir a quebra de linha após o número
+
+        switch (opcao) {
+            case 1:
+                inserirDestino();
+                break;
+            case 2:
+                editarDestino();
+                break;
+            case 3:
+                removerDestino();
+                break;
+            case 0:
+                System.out.println("Voltando ao Menu Administrativo.");
+                break;
+            default:
+                System.out.println("Opção inválida. Tente novamente.");
+        }
+    } while (opcao != 0);
+}
+
+private static void inserirDestino() {
+    System.out.println("\n----- Inserir Destino -----");
+
+    System.out.print("Nome do Destino: ");
+    String nome = scanner.nextLine();
+
+    System.out.print("Descrição do Destino: ");
+    String descricao = scanner.nextLine();
+
+    System.out.println("Categorias Disponíveis:");
+    List<CategoriaDestino> categoriasDisponiveis = destinoController.categoriasDisponiveis(); 
+    destinoView.visualizarCategorias(categoriasDisponiveis);
+
+    System.out.print("Escolha a Categoria: ");
+    int opcao = scanner.nextInt();
+    CategoriaDestino categoria = categoriasDisponiveis.get(opcao-1);
+    Destino novoDestino = new Destino(nome, descricao, categoria);
+    destinoController.adicionarDestino(novoDestino);
+
+    System.out.println("Destino adicionado com sucesso!");
+}
+
+private static void editarDestino() {
+    System.out.println("\n----- Editar Destino -----");
+
+    if (destinoController.listarDestinos().isEmpty()) {
+        System.out.println("Não há destinos para editar.");
+        return;
+    }
+
+    System.out.println("Destinos Disponíveis:");
+    List<IDestino> destinos = destinoController.listarDestinos();
+    destinoView.visualizarDestinosDisponiveis(destinos);
+
+    System.out.print("Escolha o número do Destino que deseja editar: ");
+    int numeroDestino = scanner.nextInt();
+    scanner.nextLine(); // Consumir a quebra de linha após o número
+
+    if (numeroDestino < 1 || numeroDestino > destinos.size()) {
+        System.out.println("Número de destino inválido.");
+        return;
+    }
+
+    IDestino destinoSelecionado = destinos.get(numeroDestino - 1);
+
+    System.out.println("Opções de Edição para " + destinoSelecionado.getNome() + " - " + destinoSelecionado.getCategoria() + " :");
+    System.out.println("1 - Alterar Descrição");
+    System.out.println("0 - Voltar");
+
+    System.out.print("Escolha uma opção: ");
+    int opcaoEdicao = scanner.nextInt();
+    scanner.nextLine(); // Consumir a quebra de linha após o número
+
+    switch (opcaoEdicao) {
+        case 1:
+            System.out.print("Nova Descrição: ");
+            String novaDescricao = scanner.nextLine();
+            destinoSelecionado.setDescricao(novaDescricao);
+            System.out.println("Descrição alterada com sucesso!");
+            break;
+        case 0:
+            System.out.println("Voltando ao Menu Gerenciar Destinos.");
+            break;
+        default:
+            System.out.println("Opção inválida. Voltando ao Menu Gerenciar Destinos.");
+    }
+}
+
+private static void removerDestino() {
+    System.out.println("\n----- Remover Destino -----");
+
+    if (destinoController.listarDestinos().isEmpty()) {
+        System.out.println("Não há destinos para remover.");
+        return;
+    }
+
+    System.out.println("Destinos Disponíveis:");
+    List<IDestino> destinos = destinoController.listarDestinos();
+
+    System.out.print("Escolha o número do Destino que deseja remover: ");
+    int numeroDestino = scanner.nextInt();
+    scanner.nextLine(); // Consumir a quebra de linha após o número
+
+    if (numeroDestino < 1 || numeroDestino > destinos.size()) {
+        System.out.println("Número de destino inválido.");
+        return;
+    }
+
+    IDestino destinoRemovido = destinos.get(numeroDestino - 1);
+    destinoController.removerDestino(destinoRemovido);
+    System.out.println("Destino \"" + destinoRemovido.getNome() + "\" removido com sucesso!");
+}
+
+
+private static void gerenciarPacotes() {
+	int opcao;
+
+    do {
+        System.out.println("\n----- Gerenciar Pacotes -----");
+        System.out.println("1 - Inserir Pacote");
+        System.out.println("2 - Editar Pacote");
+        System.out.println("3 - Remover Pacote");
+        System.out.println("0 - Voltar ao Menu Administrativo");
+        System.out.print("Escolha uma opção: ");
+        opcao = scanner.nextInt();
+        scanner.nextLine(); // Consumir a quebra de linha após o número
+
+        switch (opcao) {
+            case 1:
+                inserirPacote();
+                break;
+            case 2:
+                editarPacote();
+                break;
+            case 3:
+                removerPacote();
+                break;
+            case 0:
+                System.out.println("Voltando ao Menu Administrativo.");
+                break;
+            default:
+                System.out.println("Opção inválida. Tente novamente.");
+        }
+    } while (opcao != 0);
+}
+
+
+private static void inserirPacote() {
+    System.out.println("\n----- Inserir Pacote -----");
+
+    if (destinoController.listarDestinos().isEmpty()) {
+        System.out.println("Não há destinos disponíveis para criar pacotes.");
+        return;
+    }
+
+    System.out.println("Destinos Disponíveis:");
+    
+    List<IDestino> destinos = destinoController.listarDestinos();
+    destinoView.visualizarDestinosDisponiveis(destinos);
+    
+    System.out.print("Escolha o número do Destino para o Pacote: ");
+    
+    int numeroDestino = scanner.nextInt();
+    scanner.nextLine(); // Consumir a quebra de linha após o número
+
+    if (numeroDestino < 1 || numeroDestino > destinos.size()) {
+        System.out.println("Número de destino inválido.");
+        return;
+    }
+
+    IDestino destinoSelecionado = destinos.get(numeroDestino - 1);
+
+    System.out.print("Digite o Preço do Pacote: ");
+    
+    double preco = scanner.nextDouble();
+    scanner.nextLine(); // Consumir a quebra de linha após o número
+
+    System.out.print("Data de Início do Pacote (DD/MM/AAAA): ");
+    String dataInicioStr = scanner.nextLine();
+    LocalDate dataInicio = converterStringParaData(dataInicioStr);
+
+    System.out.print("Data de Fim do Pacote (DD/MM/AAAA): ");
+    String dataFimStr = scanner.nextLine();
+    LocalDate dataFim = converterStringParaData(dataFimStr);
+
+    IPacoteViagem novoPacote = new PacoteViagem(destinoSelecionado, preco, dataInicio, dataFim);
+    pacoteController.adicionarPacote(novoPacote);
+
+    System.out.println("Pacote adicionado com sucesso!");
+}
+
+private static void editarPacote() {
+    System.out.println("\n----- Editar Pacote -----");
+
+    if (pacoteController.listarPacotes().isEmpty()) {
+        System.out.println("Não há pacotes para editar.");
+        return;
+    }
+
+    System.out.println("Pacotes Disponíveis:");
+    List <IPacoteViagem> pacotes = pacoteController.listarPacotes();
+    pacoteView.visualizarPacotesDisponiveis(pacotes);
+
+    System.out.print("Escolha o número do Pacote que deseja editar: ");
+    int numeroPacote = scanner.nextInt();
+    scanner.nextLine(); // Consumir a quebra de linha após o número
+
+    if (numeroPacote < 1 || numeroPacote > pacotes.size()) {
+        System.out.println("Número de pacote inválido.");
+        return;
+    }
+
+    IPacoteViagem pacoteSelecionado = pacotes.get(numeroPacote - 1);
+
+    System.out.println("Opções de Edição para o Pacote:");
+    System.out.println("1 - Alterar Destino");
+    System.out.println("2 - Alterar Data de Início");
+    System.out.println("3 - Alterar Data de Fim");
+    System.out.println("0 - Voltar");
+
+    System.out.print("Escolha uma opção: ");
+    int opcaoEdicao = scanner.nextInt();
+    scanner.nextLine(); // Consumir a quebra de linha após o número
+
+    switch (opcaoEdicao) {
+        case 1:
+            System.out.println("Destinos Disponíveis:");
+            List<IDestino> destinos = destinoController.listarDestinos();
+            System.out.print("Escolha o número do Novo Destino para o Pacote: ");
+            int numeroNovoDestino = scanner.nextInt();
+            scanner.nextLine(); // Consumir a quebra de linha após o número
+
+            if (numeroNovoDestino < 1 || numeroNovoDestino > destinos.size()) {
+                System.out.println("Número de destino inválido.");
+                return;
+            }
+
+            IDestino novoDestino = destinos.get(numeroNovoDestino - 1);
+            pacoteSelecionado.setDestino(novoDestino);
+            System.out.println("Destino do Pacote alterado com sucesso!");
+            break;
+        case 2:
+            System.out.print("Nova Data de Início do Pacote (DD/MM/AAAA): ");
+            String novaDataInicioStr = scanner.nextLine();
+            LocalDate novaDataInicio = converterStringParaData(novaDataInicioStr);
+            pacoteSelecionado.setDataInicio(novaDataInicio);
+            System.out.println("Data de Início do Pacote alterada com sucesso!");
+            break;
+        case 3:
+            System.out.print("Nova Data de Fim do Pacote (DD/MM/AAAA): ");
+            String novaDataFimStr = scanner.nextLine();
+            LocalDate novaDataFim = converterStringParaData(novaDataFimStr);
+            pacoteSelecionado.setDataFim(novaDataFim);
+            System.out.println("Data de Fim do Pacote alterada com sucesso!");
+            break;
+        case 0:
+            System.out.println("Voltando ao Menu Gerenciar Pacotes.");
+            break;
+        default:
+            System.out.println("Opção inválida. Voltando ao Menu Gerenciar Pacotes.");
+    }
+}
+
+private static void removerPacote() {
+    System.out.println("\n----- Remover Pacote -----");
+    List<IPacoteViagem> pacotes = pacoteController.listarPacotes();
+    if (pacotes.isEmpty()) {
+        System.out.println("Não há pacotes para remover.");
+        return;
+    }
+
+    System.out.println("Pacotes Disponíveis:");
+
+    System.out.print("Escolha o número do Pacote que deseja remover: ");
+    int numeroPacote = scanner.nextInt();
+    scanner.nextLine(); // Consumir a quebra de linha após o número
+
+    if (numeroPacote < 1 || numeroPacote > pacotes.size()) {
+        System.out.println("Número de pacote inválido.");
+        return;
+    }
+
+    IPacoteViagem pacoteRemovido = pacotes.get(numeroPacote - 1);
+    pacoteController.removerPacote(pacoteRemovido);
+    System.out.println("Pacote removido com sucesso!");
+}
+
+private static void gerenciarUsuarios() {
+    int opcao;
+
+    do {
+        System.out.println("\n----- Gerenciar Usuarios -----");
+        System.out.println("1 - Inserir Usuario");
+        System.out.println("2 - Remover Usuario");
+        System.out.println("0 - Voltar ao Menu Administrativo");
+        System.out.print("Escolha uma opção: ");
+        opcao = scanner.nextInt();
+        scanner.nextLine(); // Consumir a quebra de linha após o número
+
+        switch (opcao) {
+            case 1:
+                inserirUsuario();
+                break;
+            case 2:
+                removerUsuario();
+                break;
+            case 0:
+                System.out.println("Voltando ao Menu Administrativo.");
+                break;
+            default:
+                System.out.println("Opção inválida. Tente novamente.");
+        }
+    } while (opcao != 0);
+}
+
+private static void inserirUsuario() {
+	Map<String, IUsuario> usuarios = usuarioController.mapUsuarios();
+    System.out.println("\n----- Cadastro -----");
+    System.out.print("Digite seu nome: ");
+    
+    String nome = scanner.next();
+
+    System.out.print("Digite uma email: ");
+    String email = scanner.next();
+    // Verifica se o Email já existe
+    if (usuarios.containsKey(email)) {
+        System.out.println("Email já existente. Tente um Email diferente.");
+        return;
+    }
+    System.out.print("Repita o email: ");
+    String repetirEmail = scanner.next();
+
+    // Verifica se os emails coincidem
+    if (!email.equals(repetirEmail)) {
+        System.out.println("Os emails não coincidem. Por favor, corrija.");
+        return;
+    }
+    //COMO DEVE SER
+    //adicionarUsuario(nome,email);
+    
+    //COMO ESTA SENDO
+    // Adiciona o novo usuário ao mapa
+    Usuario usuario = new Usuario(nome,email);
+    usuarios.put(email, usuario);
+
+    System.out.println("Cadastro realizado com sucesso!");
+}
+
+private static void fazerCadastro() {
+	inserirUsuario();
+}
+
+
+private static void removerUsuario() {
+    System.out.println("\n----- Remover Usuario -----");
+    Map<String,IUsuario> usuarios = usuarioController.mapUsuarios();
+
+    if (usuarios.isEmpty()) {
+        System.out.println("Não há usuarios para remover.");
+        return;
+    }
+
+    System.out.print("Digite o Email do Usuario que deseja remover: ");
+    String emailUsuario = scanner.nextLine();
+
+
+
+
+    IUsuario usuarioRemovido = usuarios.remove(emailUsuario);
+
+    if (usuarioRemovido != null) {
+        System.out.println("Usuario \"" + usuarioRemovido.getNome() + "\" removido com sucesso!");
+    } else {
+        System.out.println("Não foi encontrado um usuario com o email informado.");
+    }
+}
+
+private static LocalDate converterStringParaData(String dataStr) {
+    try {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        return LocalDate.parse(dataStr, formatter);
+    } catch (Exception e) {
+        System.out.println("Formato de data inválido. Use o formato DD/MM/AAAA.");
+        return null;
+    }
+}
 }
