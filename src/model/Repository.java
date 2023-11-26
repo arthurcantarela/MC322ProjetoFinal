@@ -35,10 +35,8 @@ public abstract class Repository<T> implements IRepository<T> {
             }
         } catch (FileNotFoundException e) {
             System.err.println("Erro ao carregar: Arquivo não encontrado.");
-            e.printStackTrace();
         } catch (IOException e) {
             System.err.println("Erro ao carregar: Erro de leitura.");
-            e.printStackTrace();
         }
         return dados;
     }
