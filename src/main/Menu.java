@@ -1,27 +1,30 @@
-package ui;
+package main;
 
 
 import java.time.LocalDate;
 import java.util.*;
 import java.util.ArrayList;
-import model.PacoteViagem;
-import model.Destino;
-import model.IDestino;
-import model.CategoriaDestino;
+import model.*;
+import controller.*;
+import view.*;
 
 public class Menu {
 
     private static final Scanner scanner = new Scanner(System.in);
-    private static final Map<String, String> usuarios = new HashMap<>();
-    //private static final Map<String, IUsuario> usuarios = new HashMap<>();
+    //private static final Map<String, String> usuarios = new HashMap<>();
+    private static final Map<String, IUsuario> usuarios = new HashMap<>();
     public static List<PacoteViagem> pacotes = new ArrayList<>();
+    public static PacoteView pacoteView = new PacoteView();
+    public static DestinoView destinoView = new DestinoView();
+    public static PacoteController pacoteController = new PacoteController();
+    public static DestinoController destinoController = new DestinoController();
     
     //private static final List<Reserva> reservas = new ArrayList<>();
-    private static String usuarioLogado;    
+    private static IUsuario usuarioLogado;    
     
     public static void main(String[] args) {
         // Adicionando um usuário de exemplo (admin)
-        usuarios.put("admin", "senhaAdmin");
+        
         Destino destino = new Destino("Tokyo", "Nice Place", CategoriaDestino.CULTURAL);
         Destino destino2 = new Destino("Las Vegas", "Cassino", CategoriaDestino.AVENTURA);
         
@@ -73,14 +76,16 @@ public class Menu {
     }
 
     private static void fazerLogin() {
-        System.out.print("Digite o usuário: ");
-        String usuario = scanner.next();
-        System.out.print("Digite a senha: ");
-        String senha = scanner.next();
+        System.out.print("Digite o email: ");
+        String email = scanner.next();
+        
+        //System.out.print("Digite a senha: ");
+        //String senha = scanner.next();
+        
+        IUsuario usuario = usuarios.get(email);
 
-        if (usuarios.containsKey(usuario) && usuarios.get(usuario).equals(senha)) {
+        if (usuario!= null) {
             System.out.println("Login bem-sucedido!");
-
             // Define o usuário logado
             usuarioLogado = usuario;
         } else {
@@ -90,31 +95,32 @@ public class Menu {
 
     private static void fazerCadastro() {
         System.out.println("\n----- Cadastro -----");
-        System.out.print("Digite um usuário: ");
-        String usuario = scanner.next();
+        System.out.print("Digite seu nome: ");
+        
+        String nome = scanner.next();
 
-        // Verifica se o usuário já existe
-        if (usuarios.containsKey(usuario)) {
-            System.out.println("Usuário já existente. Tente um usuário diferente.");
-            return;
-        }
-
-        System.out.print("Digite uma senha: ");
-        String senha = scanner.next();
-        System.out.print("Repita a senha: ");
-        String repetirSenha = scanner.next();
-
-        // Verifica se as senhas coincidem
-        if (!senha.equals(repetirSenha)) {
-            System.out.println("As senhas não coincidem. Por favor, corrija.");
-            return;
-        }
-
-        System.out.print("Digite um email: ");
+        System.out.print("Digite uma email: ");
         String email = scanner.next();
+        // Verifica se o Email já existe
+        if (usuarios.containsKey(email)) {
+            System.out.println("Email já existente. Tente um Email diferente.");
+            return;
+        }
+        System.out.print("Repita o email: ");
+        String repetirEmail = scanner.next();
 
+        // Verifica se os emails coincidem
+        if (!email.equals(repetirEmail)) {
+            System.out.println("Os emails não coincidem. Por favor, corrija.");
+            return;
+        }
+        //COMO DEVE SER
+        //adicionarUsuario(nome,email);
+        
+        //COMO ESTA SENDO
         // Adiciona o novo usuário ao mapa
-        usuarios.put(usuario, senha);
+        Usuario usuario = new Usuario(nome,email);
+        usuarios.put(email, usuario);
 
         System.out.println("Cadastro realizado com sucesso!");
     }
@@ -193,7 +199,7 @@ public class Menu {
 
         switch (opcao) {
             case 1:
-                visualizarDestinosDisponiveis();
+                destinoView.visualizarDestinosDisponiveis(destinoController, pacoteController, scanner);
                 break;
            // case 2:
            //     inserirDestino();
@@ -206,39 +212,36 @@ public class Menu {
         }
     }
 
-    private static void visualizarDestinosDisponiveis() {
-        // Adicione aqui a lógica para exibir destinos disponíveis
-        // ...
-
-        // Exemplo de exibição de destinos disponíveis
-        System.out.println("\n--- Destinos Disponíveis ---");
-        int i = 0;
-        int j = 0;
-        Set<Destino> destinosExibidos = new HashSet<>();
-        List<String> listaAux = new ArrayList<>();
-        List<PacoteViagem> pacoteSel = new ArrayList<>();
-        for (PacoteViagem pacote : pacotes) {
-        	if(pacote.isDisponivel() && destinosExibidos.add(pacote.getDestino())) {
-        		listaAux.add(i, pacote.getDestino().getNome());
-        		i ++;
-        		System.out.println(i+ "- " + pacote.getDestino().getNome());
-        	}
-        }
-        System.out.println("Escolha o destino desejado: ");
-        
-        int opcao = scanner.nextInt();
-        
-        System.out.println("\n--- Pacotes Disponíveis - Destino " + listaAux.get(opcao-1) + " ---");
-        for (PacoteViagem pacote : pacotes) {
-            if (pacote.getDestino().getNome().equals(listaAux.get(opcao-1)) && pacote.isDisponivel()) {
-            	j++;
-            	System.out.println("Pacote " + j + ": ");
-            	imprimirPacote(pacote);
-            	pacoteSel.add(pacote);
-            }
-        }
-        oferecerReserva(pacoteSel);
-    }
+//    private static void visualizarDestinosDisponiveis() {
+//
+//        System.out.println("\n--- Destinos Disponíveis ---");
+//        int i = 0;
+//        int j = 0;
+//        Set<IDestino> destinosExibidos = new HashSet<>();
+//        List<String> listaAux = new ArrayList<>();
+//        List<PacoteViagem> pacoteSel = new ArrayList<>();
+//        for (PacoteViagem pacote : pacotes) {
+//        	if(pacote.isDisponivel() && destinosExibidos.add(pacote.getDestino())) {
+//        		listaAux.add(i, pacote.getDestino().getNome());
+//        		i ++;
+//        		System.out.println(i+ " - " + pacote.getDestino().getNome() + " - " + pacote.getDestino().getCategoria());
+//        	}
+//        }
+//        System.out.println("Escolha o destino desejado: ");
+//        
+//        int opcao = scanner.nextInt();
+//        
+//        System.out.println("\n--- Pacotes Disponíveis - Destino " + listaAux.get(opcao-1) + " ---");
+//        for (PacoteViagem pacote : pacotes) {
+//            if (pacote.getDestino().getNome().equals(listaAux.get(opcao-1)) && pacote.isDisponivel()) {
+//            	j++;
+//            	System.out.println("Pacote " + j + ": ");
+//            	imprimirPacote(pacote);
+//            	pacoteSel.add(pacote);
+//            }
+//        }
+//        oferecerReserva(pacoteSel);
+//    }
         
         
     
@@ -254,8 +257,8 @@ public class Menu {
     }
     
     private static void imprimirPacote(PacoteViagem pacote) {
+    	System.out.println("Destino: " + pacote.getDestino().getNome());
     	System.out.println("Categoria: " + pacote.getDestino().getCategoria());
-        System.out.println("Destino: " + pacote.getDestino().getNome());
         System.out.println("Preço: R$ " + pacote.getPreco());
         System.out.println("Data de Início: " + pacote.getDataInicio());
         System.out.println("Data de Fim: " + pacote.getDataFim());
