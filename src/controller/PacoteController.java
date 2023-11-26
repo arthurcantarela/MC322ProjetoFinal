@@ -1,6 +1,5 @@
 package controller;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,7 +8,8 @@ import model.*;
 public class PacoteController {
 	private static List<PacoteViagem> pacotes = new ArrayList<>();
 		
-	public List<PacoteViagem> buscaPacotesPorDestino(Destino destino){
+	public List<PacoteViagem> buscaPacotesPorDestino(String nomeDestino){
+		IDestino destino = DestinoController.getDestinoPorNome(nomeDestino);
 		List<PacoteViagem> pacotesEncontrados = new ArrayList<>();
 		for(PacoteViagem pacote: pacotes) {
 			if(pacote.getDestino() == destino && pacote.isDisponivel()) {

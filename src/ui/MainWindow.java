@@ -33,7 +33,7 @@ public class MainWindow extends JFrame {
 //        window.setVisible(true);
     	Usuario usuario = new Usuario("Nome", "email@email.com");
     	Destino destino = new Destino("Destino", "Descricao", CategoriaDestino.AVENTURA);
-    	PacoteViagem pacote = new PacoteViagem(destino, 100, true, LocalDate.now(), LocalDate.now());
+    	PacoteViagem pacote = new PacoteViagem(destino, 100, LocalDate.now(), LocalDate.now());
     	
     	//primeira tentativa
     	try {
