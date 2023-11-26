@@ -1,26 +1,27 @@
 package controller;
 
 import model.IUsuario;
-import java.util.ArrayList;
-import java.util.List;
+import model.Usuario;
+import model.UsuarioRepository;
 
-public class UsuarioController {
-    private List<IUsuario> usuarios;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+public class UsuarioController{
+    private Map<String,IUsuario> usuarios = new HashMap<>();
 
     public UsuarioController() {
-        this.usuarios = new ArrayList<>();
+    	List<IUsuario> listUsuarios = new UsuarioRepository().carregar();
+    	
+    	for(IUsuario usuario: listUsuarios) {
+    		usuarios.put(usuario.getEmail(), usuario);
+    	}
+    	
     }
-
-    // Método para adicionar um novo usuário
-    public void adicionarUsuario(IUsuario usuario) {
-        usuarios.add(usuario);
-        System.out.println("Usuário adicionado: " + usuario.getNome());
-    }
-
     // Método para listar usuários
-    public void listarUsuarios() {
-        for (IUsuario usuario : usuarios) {
-            System.out.println(usuario);
-        }
+    public List<IUsuario> listarUsuarios() {
+    	 return new ArrayList<>(usuarios.values());
     }
 }

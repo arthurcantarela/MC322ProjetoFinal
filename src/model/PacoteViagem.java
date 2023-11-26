@@ -1,16 +1,36 @@
 package model;
 
-import exceptions.ReservaIndisponivelException;
+import java.time.LocalDate;
 
 public class PacoteViagem implements IPacoteViagem {
     private IDestino destino;
     private double preco;
-    private boolean disponivel;
+    private IUsuario usuario;
+    private LocalDate dataInicio;
+    private LocalDate dataFim;
 
-    public PacoteViagem(IDestino destino, double preco, boolean disponivel) {
+    public PacoteViagem(IDestino destino, double preco,
+            LocalDate dataInicio, LocalDate dataFim) {
         this.destino = destino;
         this.preco = preco;
-        this.disponivel = disponivel;
+        this.dataFim = dataFim;
+        this.dataInicio = dataInicio;
+        this.usuario = null;
+    }
+
+    public PacoteViagem(IDestino destino, double preco,
+            LocalDate dataInicio, LocalDate dataFim, IUsuario usuario) {
+        this.destino = destino;
+        this.preco = preco;
+        this.dataFim = dataFim;
+        this.dataInicio = dataInicio;
+        this.usuario = usuario;
+    }
+
+    @Override
+    public String toString() {
+        return "PacoteViagem [destino=" + destino + ", preco=" + preco + ", usuario=" + usuario + ", dataInicio="
+                + dataInicio + ", dataFim=" + dataFim + "]";
     }
 
     // Implementação do método getDestino
@@ -31,30 +51,46 @@ public class PacoteViagem implements IPacoteViagem {
         this.preco = preco;
     }
 
-    // Implementação do método isDisponivel
+    @Override
+    public IUsuario getUsuario() {
+        return usuario;
+    }
+
+    @Override
+    public LocalDate getDataInicio() {
+        return dataInicio;
+    }
+
+    @Override
+    public LocalDate getDataFim() {
+        return dataFim;
+    }
+
+    @Override
+    public void setDestino(Destino destino) {
+        this.destino = destino;
+    }
+
+    @Override
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
+    }
+
+    @Override
+    public void setDataInicio(LocalDate dataInicio) {
+        this.dataInicio = dataInicio;
+    }
+
+    @Override
+    public void setDataFim(LocalDate dataFim) {
+        this.dataFim = dataFim;
+    }
+
     @Override
     public boolean isDisponivel() {
-        return disponivel;
-    }
-
-    // Implementação do método reservar
-    @Override
-    public void reservar() throws ReservaIndisponivelException {
-        if (!disponivel) {
-            throw new ReservaIndisponivelException("Pacote de viagem não está disponível para reserva.");
-        }
-        // Aqui você pode adicionar lógica adicional para o processo de reserva.
-        // Por exemplo, atualizar o estado de disponibilidade do pacote.
-        disponivel = false;
-    }
-
-    // Método toString para facilitar a visualização das informações do pacote
-    @Override
-    public String toString() {
-        return "PacoteViagem{" +
-                "destino=" + destino +
-                ", preco=" + preco +
-                ", disponivel=" + disponivel +
-                '}';
+        if (this.usuario != null) {
+            return false;
+        } else
+            return true;
     }
 }

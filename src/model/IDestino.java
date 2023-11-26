@@ -1,11 +1,15 @@
 package model;
 
+import java.util.UUID;
+
 public interface IDestino {
-    String getNome();
+	public UUID getId();
 
-    String getDescricao();
+	public String getNome();
 
-    void setDescricao(String descricao);
+	public String getDescricao();
 
-    CategoriaDestino getCategoria();
+	public void setDescricao(String descricao);
+
+	public CategoriaDestino getCategoria();
 }

@@ -1,11 +1,11 @@
 package admin;
 
-import model.IPacoteViagem;
+import model.PacoteViagem;
 
 public interface IAdminSistema {
-    void adicionarPacote(IPacoteViagem pacote);
+	public void adicionarPacote(PacoteViagem pacote);
 
-    void removerPacote(IPacoteViagem pacote);
+    public void removerPacote(PacoteViagem pacote);
 
-    void editarPacote(IPacoteViagem pacote, IPacoteViagem novoPacote);
+    public void editarPacote(PacoteViagem pacote, PacoteViagem novoPacote);
 }

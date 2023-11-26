@@ -1,15 +1,27 @@
 package model;
 
-import exceptions.ReservaIndisponivelException;
+import java.time.LocalDate;
 
 public interface IPacoteViagem {
-    IDestino getDestino();
+	public IDestino getDestino();
 
-    double getPreco();
+	public IUsuario getUsuario();
 
-    void setPreco(double preco);
+	public double getPreco();
 
-    boolean isDisponivel();
+	public void setPreco(double preco);
 
-    void reservar() throws ReservaIndisponivelException;
+	public boolean isDisponivel();
+
+	public LocalDate getDataInicio();
+
+	public LocalDate getDataFim();
+
+	public void setDestino(Destino destino);
+
+	public void setUsuario(Usuario usuario);
+
+	public void setDataInicio(LocalDate dataInicio);
+
+	public void setDataFim(LocalDate dataFim);
 }
