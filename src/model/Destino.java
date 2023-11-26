@@ -15,6 +15,13 @@ public class Destino implements IDestino {
         this.categoria = categoria;
     }
 
+    public Destino(String nome, String descricao, CategoriaDestino categoria, UUID id) {
+        this.id = id;
+        this.nome = nome;
+        this.descricao = descricao;
+        this.categoria = categoria;
+    }
+
     // Implementação do método getId
     @Override
     public UUID getId() {
