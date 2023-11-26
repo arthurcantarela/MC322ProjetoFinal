@@ -30,7 +30,7 @@ public class PacoteViagemRepository extends Repository<IPacoteViagem> {
     // Método para converter uma linha CSV para um usuário
     protected IPacoteViagem csvParaObjeto(String csvLine) {
         String[] data = csvLine.split(",");
-        // destino.id, usuario.email, preco, dataInicio, dataFim
+        // COLUNAS: destino.id, usuario.email, preco, dataInicio, dataFim
         UUID destinoId = UUID.fromString(data[0]);
         IDestino destino = destinos.get(destinoId);
         String usuarioEmail = data[1];
