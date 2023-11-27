@@ -9,7 +9,7 @@ public interface IDestinoController {
 	public IDestino getDestinoPorNome(String destino);
 	public List<IDestino> destinosDisponiveis(IPacoteController pacoteController);
 	public List<CategoriaDestino> categoriasDisponiveis();
-	public void adicionarDestino(IDestino destino);
-	public void removerDestino(IDestino destino);
+	public IDestino adicionarDestino(IDestino destino);
+	public IDestino removerDestino(IDestino destino);
 	public List<IDestino> listarDestinos();
 }
