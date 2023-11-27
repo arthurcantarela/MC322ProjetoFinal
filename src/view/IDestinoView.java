@@ -8,8 +8,8 @@ import model.*;
 
 
 public interface IDestinoView {
-
-	public abstract void visualizarDestinosDisponiveis(List<IDestino> destinosDisponiveis);
+	
+	public abstract void visualizarDestinos(List<IDestino> destinos);
 	public abstract void visualizarCategorias(List<CategoriaDestino> destinos);
 	
 }

@@ -7,8 +7,8 @@ import model.IDestino;
 import model.IPacoteViagem;
 
 public interface IPacoteView {
-	public void visualizarPacote(IPacoteViagem pacote);
+	public void visualizarPacotes(IPacoteViagem pacote);
 	
-	public void visualizarPacotesDisponiveis(List <IPacoteViagem> pacotesDisponiveis);
+	public void visualizarPacotes(List <IPacoteViagem> pacotes);
 	
 }

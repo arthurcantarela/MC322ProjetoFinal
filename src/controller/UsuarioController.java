@@ -29,4 +29,21 @@ public class UsuarioController implements IUsuarioController{
 	public Map<String,IUsuario> mapUsuarios (){
     	return usuarios;
     }
+	@Override
+	public IUsuario adicionarUsuario(String nome, String emailUsuario) {
+		IUsuario usuario = new Usuario(nome, emailUsuario);
+		usuarios.put(usuario.getEmail(), usuario);
+		new UsuarioRepository().salvar(listarUsuarios());
+		return usuario;
+		
+	}
+	@Override
+	public IUsuario removerUsuario(String emailUsuario) {
+		IUsuario usuario = usuarios.remove(emailUsuario);
+		new UsuarioRepository().salvar(listarUsuarios());
+		return usuario;
+		
+	}
+	
+	
 }

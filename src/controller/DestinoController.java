@@ -60,14 +60,16 @@ public class DestinoController implements IDestinoController {
 		return Arrays.asList(CategoriaDestino.values());
 	}
 	@Override
-	public void adicionarDestino(IDestino destino) {
-		destinos.put(destino.getId(), destino);
+	public IDestino adicionarDestino(IDestino destino) {
+		IDestino destinoNovo = destinos.put(destino.getId(), destino);
 		new DestinoRepository().salvar(listarDestinos());
+		return destinoNovo;
 		
 	}
 	@Override
-	public void removerDestino(IDestino destino) {
-		destinos.remove(destino.getId());
+	public IDestino removerDestino(IDestino destino) {
+		IDestino destinoRemovido = destinos.remove(destino.getId());
 		new DestinoRepository().salvar(listarDestinos());
+		return destinoRemovido;
 	}
 }

@@ -21,6 +21,7 @@ public class Menu {
     public static List<PacoteViagem> pacotes = new ArrayList<>();
     public static IPacoteView pacoteView = new PacoteView();
     public static IDestinoView destinoView = new DestinoView();
+    public static IUsuarioView usuarioView = new UsuarioView();
     public static IPacoteController pacoteController = new PacoteController();
     public static IDestinoController destinoController = new DestinoController();
     public static IReservaController reservaController = new ReservaController();
@@ -32,19 +33,6 @@ public class Menu {
     public static void main(String[] args) {
         // Adicionando um usuário de exemplo (admin)
         
-        Destino destino = new Destino("Tokyo", "Nice Place", CategoriaDestino.CULTURAL);
-        Destino destino2 = new Destino("Las Vegas", "Cassino", CategoriaDestino.AVENTURA);
-        
-        PacoteViagem pacote = new PacoteViagem(destino, 1800, LocalDate.now(), LocalDate.now()); 
-        PacoteViagem pacote2 = new PacoteViagem(destino,2500, LocalDate.now(), LocalDate.now()); 
-        PacoteViagem pacote3 = new PacoteViagem(destino2,3600, LocalDate.now(), LocalDate.now()); 
-        PacoteViagem pacote4 = new PacoteViagem(destino2,5500, LocalDate.now(), LocalDate.now()); 
-        
-        pacotes.add(pacote);
-        pacotes.add(pacote2);
-        pacotes.add(pacote3);
-        pacotes.add(pacote4);
-
         int opcao;
 
         do {
@@ -75,6 +63,7 @@ public class Menu {
                 } else {
                     menuOpcoesUsuario();
                 }
+                usuarioLogado = null;
             }
 
         } while (opcao != 0);
@@ -127,6 +116,7 @@ public class Menu {
                     break;
                 case 0:
                     System.out.println("Saindo do menu de opções do usuário.");
+                    
                     break;
                 default:
                     System.out.println("Opção inválida. Tente novamente.");
@@ -220,7 +210,7 @@ public class Menu {
     	
     	System.out.println("\n--- Destinos Disponíveis ---");
     	
-    	destinoView.visualizarDestinosDisponiveis(destinosDisponiveis);
+    	destinoView.visualizarDestinos(destinosDisponiveis);
     	
         System.out.println("Escolha o destino desejado: ");
         
@@ -230,7 +220,7 @@ public class Menu {
         List<IPacoteViagem> pacotesDisponiveis = pacoteController.buscarPacotesDisponiveis(destinoSelecionado);
         
         System.out.println("\n--- Pacotes Disponíveis - Destino " + destinoSelecionado.getNome() + " ---");
-        pacoteView.visualizarPacotesDisponiveis(pacotesDisponiveis);
+        pacoteView.visualizarPacotes(pacotesDisponiveis);
         
         System.out.println("Selecione um Pacote para Reserva (ou volte ao Menu selecionando 0)");
         
@@ -255,7 +245,7 @@ public class Menu {
         
         System.out.println("\n--- Pacotes Disponíveis - Preço Máximo " + precoMaximo + " ---");
         
-        pacoteView.visualizarPacotesDisponiveis(pacotesDisponiveis);
+        pacoteView.visualizarPacotes(pacotesDisponiveis);
         
         System.out.println("Selecione um Pacote para Reserva (ou volte ao Menu selecionando 0)");
         
@@ -281,7 +271,7 @@ public class Menu {
         
         System.out.println("\n--- Pacotes Disponíveis - Categoria " + categoria + " ---");
         
-        pacoteView.visualizarPacotesDisponiveis(pacotesDisponiveis);
+        pacoteView.visualizarPacotes(pacotesDisponiveis);
         
         System.out.println("Selecione um Pacote para Reserva (ou volte ao Menu selecionando 0)");
         
@@ -351,6 +341,7 @@ public static void menuOpcoesAdministrativas(){
 	            break;
 	        case 0:
 	            System.out.println("Saindo do Menu Administrativo. Até mais!");
+	            
 	            break;
 	        default:
 	            System.out.println("Opção inválida. Tente novamente.");
@@ -376,22 +367,25 @@ private static void gerenciarDestinos() {
 
     do {
         System.out.println("\n----- Gerenciar Destinos -----");
-        System.out.println("1 - Inserir Destino");
-        System.out.println("2 - Editar Destino");
-        System.out.println("3 - Remover Destino");
+        System.out.println("1 - Visualizar Destinos");
+        System.out.println("2 - Inserir Destino");
+        System.out.println("3 - Editar Destino");
+        System.out.println("4 - Remover Destino");
         System.out.println("0 - Voltar ao Menu Administrativo");
         System.out.print("Escolha uma opção: ");
         opcao = scanner.nextInt();
         scanner.nextLine(); // Consumir a quebra de linha após o número
 
         switch (opcao) {
-            case 1:
+        	case 1 :
+        		visualizarDestino();
+            case 2:
                 inserirDestino();
                 break;
-            case 2:
+            case 3:
                 editarDestino();
                 break;
-            case 3:
+            case 4:
                 removerDestino();
                 break;
             case 0:
@@ -401,6 +395,10 @@ private static void gerenciarDestinos() {
                 System.out.println("Opção inválida. Tente novamente.");
         }
     } while (opcao != 0);
+}
+
+private static void visualizarDestino() {
+	destinoView.visualizarDestinos(destinoController.listarDestinos());
 }
 
 private static void inserirDestino() {
@@ -435,7 +433,7 @@ private static void editarDestino() {
 
     System.out.println("Destinos Disponíveis:");
     List<IDestino> destinos = destinoController.listarDestinos();
-    destinoView.visualizarDestinosDisponiveis(destinos);
+    destinoView.visualizarDestinos(destinos);
 
     System.out.print("Escolha o número do Destino que deseja editar: ");
     int numeroDestino = scanner.nextInt();
@@ -481,7 +479,7 @@ private static void removerDestino() {
 
     System.out.println("Destinos Disponíveis:");
     List<IDestino> destinos = destinoController.listarDestinos();
-    destinoView.visualizarDestinosDisponiveis(destinos);
+    destinoView.visualizarDestinos(destinos);
 
     System.out.print("Escolha o número do Destino que deseja remover: ");
     int numeroDestino = scanner.nextInt();
@@ -503,22 +501,25 @@ private static void gerenciarPacotes() {
 
     do {
         System.out.println("\n----- Gerenciar Pacotes -----");
-        System.out.println("1 - Inserir Pacote");
-        System.out.println("2 - Editar Pacote");
-        System.out.println("3 - Remover Pacote");
+        System.out.println("1 - Visualizar Pacotes");
+        System.out.println("2 - Inserir Pacote");
+        System.out.println("3 - Editar Pacote");
+        System.out.println("4 - Remover Pacote");
         System.out.println("0 - Voltar ao Menu Administrativo");
         System.out.print("Escolha uma opção: ");
         opcao = scanner.nextInt();
         scanner.nextLine(); // Consumir a quebra de linha após o número
 
         switch (opcao) {
-            case 1:
+        	case 1:
+        		visualizarPacotes();
+        	case 2:
                 inserirPacote();
                 break;
-            case 2:
+            case 3:
                 editarPacote();
                 break;
-            case 3:
+            case 4:
                 removerPacote();
                 break;
             case 0:
@@ -530,6 +531,9 @@ private static void gerenciarPacotes() {
     } while (opcao != 0);
 }
 
+private static void visualizarPacotes() {
+	pacoteView.visualizarPacotes(pacoteController.listarPacotes());
+}
 
 private static void inserirPacote() {
     System.out.println("\n----- Inserir Pacote -----");
@@ -542,7 +546,7 @@ private static void inserirPacote() {
     System.out.println("Destinos Disponíveis:");
     
     List<IDestino> destinos = destinoController.listarDestinos();
-    destinoView.visualizarDestinosDisponiveis(destinos);
+    destinoView.visualizarDestinos(destinos);
     
     System.out.print("Escolha o número do Destino para o Pacote: ");
     
@@ -585,7 +589,7 @@ private static void editarPacote() {
 
     System.out.println("Pacotes Disponíveis:");
     List <IPacoteViagem> pacotes = pacoteController.listarPacotes();
-    pacoteView.visualizarPacotesDisponiveis(pacotes);
+    pacoteView.visualizarPacotes(pacotes);
 
     System.out.print("Escolha o número do Pacote que deseja editar: ");
     int numeroPacote = scanner.nextInt();
@@ -676,18 +680,21 @@ private static void gerenciarUsuarios() {
 
     do {
         System.out.println("\n----- Gerenciar Usuarios -----");
-        System.out.println("1 - Inserir Usuario");
-        System.out.println("2 - Remover Usuario");
+        System.out.println("1 - Visualizar Usuarios");
+        System.out.println("2 - Inserir Usuario");
+        System.out.println("3 - Remover Usuario");
         System.out.println("0 - Voltar ao Menu Administrativo");
         System.out.print("Escolha uma opção: ");
         opcao = scanner.nextInt();
         scanner.nextLine(); // Consumir a quebra de linha após o número
 
         switch (opcao) {
-            case 1:
+        	case 1:
+        		visualizarUsuarios();
+        	case 2:
                 inserirUsuario();
                 break;
-            case 2:
+            case 3:
                 removerUsuario();
                 break;
             case 0:
@@ -697,6 +704,10 @@ private static void gerenciarUsuarios() {
                 System.out.println("Opção inválida. Tente novamente.");
         }
     } while (opcao != 0);
+}
+
+private static void visualizarUsuarios() {
+	usuarioView.visualizarUsuarios(usuarioController.listarUsuarios());
 }
 
 private static void inserirUsuario() {
@@ -721,15 +732,9 @@ private static void inserirUsuario() {
         System.out.println("Os emails não coincidem. Por favor, corrija.");
         return;
     }
-    //COMO DEVE SER
-    //adicionarUsuario(nome,email);
     
-    //COMO ESTA SENDO
-    // Adiciona o novo usuário ao mapa
-    Usuario usuario = new Usuario(nome,email);
-    usuarios.put(email, usuario);
-
-    System.out.println("Cadastro realizado com sucesso!");
+    IUsuario novoUsuario = usuarioController.adicionarUsuario(nome, email);
+    System.out.println("Usuario " + novoUsuario.getNome()  + " cadastrado com sucesso!");
 }
 
 private static void fazerCadastro() {
@@ -749,10 +754,7 @@ private static void removerUsuario() {
     System.out.print("Digite o Email do Usuario que deseja remover: ");
     String emailUsuario = scanner.nextLine();
 
-
-
-
-    IUsuario usuarioRemovido = usuarios.remove(emailUsuario);
+    IUsuario usuarioRemovido = usuarioController.removerUsuario(emailUsuario);
 
     if (usuarioRemovido != null) {
         System.out.println("Usuario \"" + usuarioRemovido.getNome() + "\" removido com sucesso!");

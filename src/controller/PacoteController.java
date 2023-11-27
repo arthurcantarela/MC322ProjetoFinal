@@ -30,8 +30,9 @@ public class PacoteController implements IPacoteController {
 	}
 	
 	@Override
-	public void removerPacote(IPacoteViagem pacote) {
-		// TODO Auto-generated method stub
+	public IPacoteViagem removerPacote(IPacoteViagem pacote) {
+		pacotes.remove(pacote);
+		return pacote;
 		
 	}
 
@@ -85,7 +86,7 @@ public class PacoteController implements IPacoteController {
 		return pacotes;
 	}
 	
-	public void adicionarPacote(IPacoteViagem pacote) {
+	public IPacoteViagem adicionarPacote(IPacoteViagem pacote) {
 		//map destinos
 		List<IDestino> listDestinos = new DestinoRepository().carregar();
 		HashMap<UUID, IDestino> destinos = new HashMap<>();
@@ -100,6 +101,8 @@ public class PacoteController implements IPacoteController {
 		}
 		pacotes.add(pacote);
 		new PacoteViagemRepository(destinos, usuarios).salvar(pacotes);
+		
+		return pacote;
 		
 	}
 
