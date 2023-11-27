@@ -3,12 +3,15 @@ package controller;
 import model.*;
 
 import java.util.ArrayList;
+
 import java.util.List;
 
 import exceptions.ReservaIndisponivelException;
 
 public class ReservaController implements IReservaController{
-	private static List<Reserva> reservas = new ArrayList<>();
+
+	private static List<IReserva> reservas = new ArrayList<>();
+	
 
 	public ReservaController() {
 		IPacoteController pacoteController = new PacoteController();
@@ -20,7 +23,7 @@ public class ReservaController implements IReservaController{
 		}
 	}
 	
-	public static List<Reserva> getReservas() {
+	public static List<IReserva> getReservas() {
 		return reservas;
 	}
 	 // Implementação do método reservar
@@ -39,7 +42,18 @@ public class ReservaController implements IReservaController{
     		System.err.println(e);
     	}
     }
-	public static void setReservas(List<Reserva> reservas) {
+	public static void setReservas(List<IReserva> reservas) {
 		ReservaController.reservas = reservas;
 	};
+	
+	@Override
+	public List<IReserva> listarReservasUsuario(IUsuario usuario) {
+		List<IReserva> reservasDoUsuario = new ArrayList<IReserva>();
+		for(IReserva reserva : reservas) {
+			if(reserva.getReservante() == usuario) {
+				reservasDoUsuario.add(reserva);
+			}
+		} 
+		return reservasDoUsuario;
+	}
 }

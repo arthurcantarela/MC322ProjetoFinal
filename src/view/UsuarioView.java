@@ -2,8 +2,8 @@ package view;
 
 import java.util.List;
 
-import model.IPacoteViagem;
 import model.IUsuario;
+import model.UsuarioAdmin;
 
 public class UsuarioView implements IUsuarioView {
 	
@@ -11,8 +11,14 @@ public class UsuarioView implements IUsuarioView {
 		int j = 0;
         for (IUsuario usuario : usuarios ) {
         	j++;
-        	System.out.println(j +" -  Usuario:" + usuario.getNome());
+        	if(usuario instanceof UsuarioAdmin) {
+        		System.out.println(j +" - Usuário:" + usuario.getNome() + "(Administrador)");
+        	} else {
+        		System.out.println(j +" - Usuário:" + usuario.getNome());
+        	}
         	System.out.println("Email:" + usuario.getEmail());
+        	System.out.println("");
+
         }
 	}
 	

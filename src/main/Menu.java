@@ -1,8 +1,6 @@
 package main;
 
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Map;
@@ -22,10 +20,12 @@ public class Menu {
     public static IPacoteView pacoteView = new PacoteView();
     public static IDestinoView destinoView = new DestinoView();
     public static IUsuarioView usuarioView = new UsuarioView();
+    public static IReservaView reservaView = new ReservaView();
     public static IPacoteController pacoteController = new PacoteController();
     public static IDestinoController destinoController = new DestinoController();
     public static IReservaController reservaController = new ReservaController();
     public static IUsuarioController usuarioController = new UsuarioController();
+    
     
     //private static final List<Reserva> reservas = new ArrayList<>();
     private static IUsuario usuarioLogado;    
@@ -58,7 +58,7 @@ public class Menu {
             }
 
             if (usuarioLogado != null) {
-                if (usuarioLogado.getNome().equals("1")) {
+                if (usuarioLogado instanceof UsuarioAdmin) {
                     menuOpcoesAdministrativas();
                 } else {
                     menuOpcoesUsuario();
@@ -109,7 +109,7 @@ public class Menu {
                     procurarPacote();
                     break;
                 case 2:
-                    //visualizarReservas();
+                    visualizarReservas();
                     break;
                 case 3:
                     exibirOfertas();
@@ -266,7 +266,7 @@ public class Menu {
 
 
     private static void exibirPacotesPorCategoria(CategoriaDestino categoria) {
-    	int j = 0;
+    	
         List<IPacoteViagem> pacotesDisponiveis = pacoteController.buscarPacotesDisponiveis(categoria);
         
         System.out.println("\n--- Pacotes Disponíveis - Categoria " + categoria + " ---");
@@ -288,6 +288,11 @@ public class Menu {
         } 
    }
 
+    
+private static void visualizarReservas() {
+	System.out.println("\n----- Mostrando Reservas de " + usuarioLogado.getNome() + "-----");
+	reservaView.visualizarReservas(reservaController.listarReservasUsuario(usuarioLogado));
+}
 
 private static void exibirOfertas() {
     System.out.println("\n----- Ofertas -----");
@@ -379,6 +384,7 @@ private static void gerenciarDestinos() {
         switch (opcao) {
         	case 1 :
         		visualizarDestino();
+        		break;
             case 2:
                 inserirDestino();
                 break;
@@ -513,6 +519,7 @@ private static void gerenciarPacotes() {
         switch (opcao) {
         	case 1:
         		visualizarPacotes();
+        		break;
         	case 2:
                 inserirPacote();
                 break;
@@ -683,6 +690,7 @@ private static void gerenciarUsuarios() {
         System.out.println("1 - Visualizar Usuarios");
         System.out.println("2 - Inserir Usuario");
         System.out.println("3 - Remover Usuario");
+        System.out.println("4 - Tornar Administrador");
         System.out.println("0 - Voltar ao Menu Administrativo");
         System.out.print("Escolha uma opção: ");
         opcao = scanner.nextInt();
@@ -691,12 +699,15 @@ private static void gerenciarUsuarios() {
         switch (opcao) {
         	case 1:
         		visualizarUsuarios();
+        		break;
         	case 2:
                 inserirUsuario();
                 break;
             case 3:
                 removerUsuario();
                 break;
+            case 4:
+            	tornarAdmin();
             case 0:
                 System.out.println("Voltando ao Menu Administrativo.");
                 break;
@@ -761,6 +772,18 @@ private static void removerUsuario() {
     } else {
         System.out.println("Não foi encontrado um usuario com o email informado.");
     }
+}
+
+private static void tornarAdmin() {
+	System.out.println("\n----- Tornar Usuario Administrador-----");
+	System.out.print("Digite o Email do Usuario que deseja tornar Administrador: ");
+	String emailUsuario = scanner.nextLine();
+	
+	IUsuario novoAdmin = usuarioController.adicionarUsuario(new UsuarioAdmin(usuarioController.removerUsuario(emailUsuario)));
+	
+	System.out.print("Usuario Administrador: " + novoAdmin.getNome() + " registrado com sucesso!");
+	
+	
 }
 
 private static LocalDate converterStringParaData(String dataStr) {
