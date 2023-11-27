@@ -481,6 +481,7 @@ private static void removerDestino() {
 
     System.out.println("Destinos Disponíveis:");
     List<IDestino> destinos = destinoController.listarDestinos();
+    destinoView.visualizarDestinosDisponiveis(destinos);
 
     System.out.print("Escolha o número do Destino que deseja remover: ");
     int numeroDestino = scanner.nextInt();
