@@ -86,7 +86,21 @@ public class PacoteController implements IPacoteController {
 	}
 	
 	public void adicionarPacote(IPacoteViagem pacote) {
-		//todo
+		//map destinos
+		List<IDestino> listDestinos = new DestinoRepository().carregar();
+		HashMap<UUID, IDestino> destinos = new HashMap<>();
+		for(IDestino destino: listDestinos) {
+			destinos.put(destino.getId(), destino);
+		}	
+		//map usuarios
+		HashMap<String,IUsuario> usuarios = new HashMap<>();
+		List<IUsuario> listUsuarios = new UsuarioRepository().carregar();
+		for(IUsuario usuario: listUsuarios) {
+			usuarios.put(usuario.getEmail(), usuario);
+		}
+		pacotes.add(pacote);
+		new PacoteViagemRepository(destinos, usuarios).salvar(pacotes);
+		
 	}
 
 }
