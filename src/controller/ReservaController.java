@@ -10,6 +10,16 @@ import exceptions.ReservaIndisponivelException;
 public class ReservaController implements IReservaController{
 	private static List<Reserva> reservas = new ArrayList<>();
 
+	public ReservaController() {
+		IPacoteController pacoteController = new PacoteController();
+		List<IPacoteViagem> listPacotes = pacoteController.listarPacotes();
+		for(IPacoteViagem pacote:listPacotes) {
+			if(pacote.getUsuario()!=null) {
+				reservas.add(new Reserva(pacote.getUsuario(), pacote));
+			}
+		}
+	}
+	
 	public static List<Reserva> getReservas() {
 		return reservas;
 	}

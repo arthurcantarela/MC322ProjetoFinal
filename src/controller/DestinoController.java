@@ -9,6 +9,9 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
+import main.Menu;
+import model.DestinoRepository;
+
 import model.*;
 
 public class DestinoController implements IDestinoController {
@@ -16,11 +19,9 @@ public class DestinoController implements IDestinoController {
 	
 	public DestinoController() {
 		List<IDestino> listDestinos = new DestinoRepository().carregar();
-    	
     	for(IDestino destino: listDestinos) {
     		destinos.put(destino.getId(), destino);
-    	}
-    	
+    	}	
     }
     // Método para listar usuários
     public List<IDestino> listarDestinos() {
@@ -60,17 +61,13 @@ public class DestinoController implements IDestinoController {
 	}
 	@Override
 	public void adicionarDestino(IDestino destino) {
-		// TODO Auto-generated method stub
+		destinos.put(destino.getId(), destino);
+		new DestinoRepository().salvar(listarDestinos());
 		
 	}
 	@Override
 	public void removerDestino(IDestino destino) {
-		// TODO Auto-generated method stub
-		
+		destinos.remove(destino.getId());
+		new DestinoRepository().salvar(listarDestinos());
 	}
-
-	 
-    	
-    
 }
-
