@@ -1,21 +1,40 @@
 package controller;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 
 import model.*;
 
 public class PacoteController implements IPacoteController {
+	private static List<IPacoteViagem> pacotes = new ArrayList<>();
+	
+	public PacoteController() {
+		//map destinos
+		List<IDestino> listDestinos = new DestinoRepository().carregar();
+		HashMap<UUID, IDestino> destinos = new HashMap<>();
+    	for(IDestino destino: listDestinos) {
+			destinos.put(destino.getId(), destino);
+    	}	
+		//map usuarios
+    	HashMap<String,IUsuario> usuarios = new HashMap<>();
+    	List<IUsuario> listUsuarios = new UsuarioRepository().carregar();
+    	for(IUsuario usuario: listUsuarios) {
+    		usuarios.put(usuario.getEmail(), usuario);
+    	}
+		pacotes = new PacoteViagemRepository(destinos, usuarios).carregar();
+	}
+	
 	@Override
 	public void removerPacote(IPacoteViagem pacote) {
 		// TODO Auto-generated method stub
 		
 	}
 
-	private static List<IPacoteViagem> pacotes = new ArrayList<>();
-	
 	//Testar
 	public List<IPacoteViagem> buscarPacotesDisponiveis(List<IDestino> destinos){
 		//A lista de destinos não pode haver repetição
@@ -67,7 +86,21 @@ public class PacoteController implements IPacoteController {
 	}
 	
 	public void adicionarPacote(IPacoteViagem pacote) {
-		//todo
+		//map destinos
+		List<IDestino> listDestinos = new DestinoRepository().carregar();
+		HashMap<UUID, IDestino> destinos = new HashMap<>();
+		for(IDestino destino: listDestinos) {
+			destinos.put(destino.getId(), destino);
+		}	
+		//map usuarios
+		HashMap<String,IUsuario> usuarios = new HashMap<>();
+		List<IUsuario> listUsuarios = new UsuarioRepository().carregar();
+		for(IUsuario usuario: listUsuarios) {
+			usuarios.put(usuario.getEmail(), usuario);
+		}
+		pacotes.add(pacote);
+		new PacoteViagemRepository(destinos, usuarios).salvar(pacotes);
+		
 	}
 
 }
