@@ -10,7 +10,7 @@ public interface IPacoteController {
 	public List<IPacoteViagem> buscarPacotesDisponiveis(double precoMaximo);
 	public List<IPacoteViagem> buscarPacotesDisponiveis(CategoriaDestino categoria);
 	public List<IPacoteViagem> listarPacotes();
-	public void adicionarPacote(IPacoteViagem pacote);
-	public void removerPacote(IPacoteViagem pacote);
+	public IPacoteViagem adicionarPacote(IPacoteViagem pacote);
+	public IPacoteViagem removerPacote(IPacoteViagem pacote);
 	
 }

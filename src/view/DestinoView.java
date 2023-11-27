@@ -1,24 +1,18 @@
 package view;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Scanner;
-
-
-import controller.*;
-
 import model.*;
 
 public class DestinoView implements IDestinoView{
 	PacoteView pacoteView = new PacoteView();
 
 	@Override
-	public void visualizarDestinosDisponiveis(List <IDestino> destinosDisponiveis) {
+	public void visualizarDestinos(List <IDestino> destinos) {
         int i = 0;
-        for(IDestino destino: destinosDisponiveis) {
+        for(IDestino destino: destinos) {
         	i ++;
         	System.out.println(i+ " - " + destino.getNome() + " - " + destino.getCategoria());
+        	System.out.println("Descrição " + destino.getDescricao());
         }
     }
 	

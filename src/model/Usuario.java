@@ -8,6 +8,11 @@ public class Usuario implements IUsuario {
         this.nome = nome;
         this.email = email;
     }
+    
+    public Usuario(IUsuario usuario) {
+        this.nome = usuario.getNome();
+        this.email = usuario.getEmail();
+    }
 
     // Implementação do método getNome
     @Override

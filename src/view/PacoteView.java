@@ -1,6 +1,6 @@
 package view;
 
-import java.util.ArrayList;
+
 import java.util.List;
 
 import model.*;
@@ -8,7 +8,7 @@ import model.*;
 public class PacoteView implements IPacoteView{
 
 	@Override
-    public void visualizarPacote(IPacoteViagem pacote) {
+    public void visualizarPacotes(IPacoteViagem pacote) {
     	System.out.println("Destino: " + pacote.getDestino().getNome());
     	System.out.println("Categoria: " + pacote.getDestino().getCategoria());
         System.out.println("Preço: R$ " + pacote.getPreco());
@@ -17,12 +17,12 @@ public class PacoteView implements IPacoteView{
         System.out.println();
     }
 	
-	public void visualizarPacotesDisponiveis(List <IPacoteViagem> pacotesDisponiveis) {
+	public void visualizarPacotes(List <IPacoteViagem> pacotes) {
 		int j = 0;
-        for (IPacoteViagem pacote : pacotesDisponiveis ) {
+        for (IPacoteViagem pacote : pacotes ) {
         	j++;
         	System.out.println("Pacote " + j + ": ");
-        	visualizarPacote(pacote);
+        	visualizarPacotes(pacote);
         }
 	}
 	

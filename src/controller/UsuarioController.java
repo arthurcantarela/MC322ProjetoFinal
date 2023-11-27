@@ -2,6 +2,7 @@ package controller;
 
 import model.IUsuario;
 import model.Usuario;
+import model.UsuarioAdmin;
 import model.UsuarioRepository;
 
 import java.util.ArrayList;
@@ -29,4 +30,31 @@ public class UsuarioController implements IUsuarioController{
 	public Map<String,IUsuario> mapUsuarios (){
     	return usuarios;
     }
+	@Override
+	public IUsuario adicionarUsuario(String nome, String emailUsuario) {
+		IUsuario usuario = new Usuario(nome, emailUsuario);
+		usuarios.put(usuario.getEmail(), usuario);
+		new UsuarioRepository().salvar(listarUsuarios());
+		return usuario;
+		
+	}
+	
+	public IUsuario adicionarUsuario(UsuarioAdmin usuario) {
+		usuarios.put(usuario.getEmail(), usuario);
+		new UsuarioRepository().salvar(listarUsuarios());
+		return usuario;
+		
+	}
+	
+	
+	@Override
+	public IUsuario removerUsuario(String emailUsuario) {
+		IUsuario usuario = usuarios.remove(emailUsuario);
+		new UsuarioRepository().salvar(listarUsuarios());
+		return usuario;
+		
+	}
+	
+
+	
 }
