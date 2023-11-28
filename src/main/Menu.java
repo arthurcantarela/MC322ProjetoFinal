@@ -7,14 +7,16 @@ import java.util.*;
 
 import model.*;
 import controller.*;
+import exceptions.CampoVazioException;
+import exceptions.EmailExistenteException;
+import exceptions.EmailsNaoCoincidemException;
 import exceptions.ReservaIndisponivelException;
+import exceptions.TenteNovamenteException;
 import view.*;
 
 public class Menu {
 
     private static final Scanner scanner = new Scanner(System.in);
-    // private static final Map<String, String> usuarios = new HashMap<>();
-    // private static final Map<String, IUsuario> usuarios = new HashMap<>();
     public static List<PacoteViagem> pacotes = new ArrayList<>();
     public static IPacoteView pacoteView = new PacoteView();
     public static IDestinoView destinoView = new DestinoView();
@@ -25,12 +27,10 @@ public class Menu {
     public static IReservaController reservaController = new ReservaController();
     public static IUsuarioController usuarioController = new UsuarioController();
 
-    // private static final List<Reserva> reservas = new ArrayList<>();
     private static IUsuario usuarioLogado;
 
     public static void main(String[] args) {
-        // Adicionando um usuário de exemplo (admin)
-
+        scanner.useDelimiter("\n");
         int opcao;
 
         do {
@@ -39,7 +39,12 @@ public class Menu {
             System.out.println("2 - Cadastro");
             System.out.println("0 - Sair");
             System.out.print("Escolha uma opção: ");
-            opcao = scanner.nextInt();
+            try {
+                opcao = scanner.nextInt();
+            } catch (InputMismatchException e) {
+                opcao = -1;
+                scanner.nextLine();
+            }
 
             switch (opcao) {
                 case 1:
@@ -74,9 +79,6 @@ public class Menu {
         Map<String, IUsuario> usuarios = usuarioController.mapUsuarios();
         String email = scanner.next();
 
-        // System.out.print("Digite a senha: ");
-        // String senha = scanner.next();
-
         IUsuario usuario = usuarios.get(email);
 
         if (usuario != null) {
@@ -98,7 +100,12 @@ public class Menu {
             System.out.println("3 - Ofertas");
             System.out.println("0 - Sair");
             System.out.print("Escolha uma opção: ");
-            opcao = scanner.nextInt();
+            try {
+                opcao = scanner.nextInt();
+            } catch (InputMismatchException e) {
+                opcao = -1;
+                scanner.nextLine();
+            }
 
             switch (opcao) {
                 case 1:
@@ -131,7 +138,12 @@ public class Menu {
             System.out.println("3 - Procurar por Preço Máximo");
             System.out.println("0 - Voltar");
             System.out.print("Escolha uma opção: ");
-            opcao = scanner.nextInt();
+            try {
+                opcao = scanner.nextInt();
+            } catch (InputMismatchException e) {
+                opcao = -1;
+                scanner.nextLine();
+            }
 
             switch (opcao) {
                 case 1:
@@ -695,7 +707,7 @@ public class Menu {
                     visualizarUsuarios();
                     break;
                 case 2:
-                    inserirUsuario();
+                    fazerCadastro();
                     break;
                 case 3:
                     removerUsuario();
@@ -715,27 +727,33 @@ public class Menu {
         usuarioView.visualizarUsuarios(usuarioController.listarUsuarios());
     }
 
-    private static void inserirUsuario() {
+    private static void inserirUsuario()
+            throws TenteNovamenteException {
         Map<String, IUsuario> usuarios = usuarioController.mapUsuarios();
         System.out.println("\n----- Cadastro -----");
         System.out.print("Digite seu nome: ");
 
         String nome = scanner.next();
+        if (nome.isBlank()) {
+            throw new CampoVazioException("nome");
+        }
 
         System.out.print("Digite uma email: ");
         String email = scanner.next();
+        if (email.isBlank()) {
+            throw new CampoVazioException("email");
+        }
+
         // Verifica se o Email já existe
         if (usuarios.containsKey(email)) {
-            System.out.println("Email já existente. Tente um Email diferente.");
-            return;
+            throw new EmailExistenteException();
         }
         System.out.print("Repita o email: ");
         String repetirEmail = scanner.next();
 
         // Verifica se os emails coincidem
         if (!email.equals(repetirEmail)) {
-            System.out.println("Os emails não coincidem. Por favor, corrija.");
-            return;
+            throw new EmailsNaoCoincidemException();
         }
 
         IUsuario novoUsuario = usuarioController.adicionarUsuario(nome, email);
@@ -743,7 +761,11 @@ public class Menu {
     }
 
     private static void fazerCadastro() {
-        inserirUsuario();
+        try {
+            inserirUsuario();
+        } catch (TenteNovamenteException e) {
+            System.out.println(e.getMessage());
+        }
     }
 
     private static void removerUsuario() {
