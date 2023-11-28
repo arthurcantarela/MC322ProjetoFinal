@@ -2,7 +2,7 @@ package main;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.Map;
+import java.time.format.DateTimeParseException;
 import java.util.*;
 
 import model.*;
@@ -10,6 +10,8 @@ import controller.*;
 import exceptions.CampoVazioException;
 import exceptions.EmailExistenteException;
 import exceptions.EmailsNaoCoincidemException;
+import exceptions.FormatoDataInvalidoException;
+import exceptions.IntervaloDatasInvalidoException;
 import exceptions.ReservaIndisponivelException;
 import exceptions.TenteNovamenteException;
 import view.*;
@@ -522,24 +524,28 @@ public class Menu {
             opcao = scanner.nextInt();
             scanner.nextLine(); // Consumir a quebra de linha após o número
 
-            switch (opcao) {
-                case 1:
-                    visualizarPacotes();
-                    break;
-                case 2:
-                    inserirPacote();
-                    break;
-                case 3:
-                    editarPacote();
-                    break;
-                case 4:
-                    removerPacote();
-                    break;
-                case 0:
-                    System.out.println("Voltando ao Menu Administrativo.");
-                    break;
-                default:
-                    System.out.println("Opção inválida. Tente novamente.");
+            try {
+                switch (opcao) {
+                    case 1:
+                        visualizarPacotes();
+                        break;
+                    case 2:
+                        inserirPacote();
+                        break;
+                    case 3:
+                        editarPacote();
+                        break;
+                    case 4:
+                        removerPacote();
+                        break;
+                    case 0:
+                        System.out.println("Voltando ao Menu Administrativo.");
+                        break;
+                    default:
+                        System.out.println("Opção inválida. Tente novamente.");
+                }
+            } catch (TenteNovamenteException e) {
+                System.out.println(e.getMessage());
             }
         } while (opcao != 0);
     }
@@ -548,7 +554,7 @@ public class Menu {
         pacoteView.visualizarPacotes(pacoteController.listarPacotes());
     }
 
-    private static void inserirPacote() {
+    private static void inserirPacote() throws TenteNovamenteException {
         System.out.println("\n----- Inserir Pacote -----");
 
         if (destinoController.listarDestinos().isEmpty()) {
@@ -586,13 +592,17 @@ public class Menu {
         String dataFimStr = scanner.nextLine();
         LocalDate dataFim = converterStringParaData(dataFimStr);
 
+        if (!dataInicio.isBefore(dataFim)) {
+            throw new IntervaloDatasInvalidoException();
+        }
+
         IPacoteViagem novoPacote = new PacoteViagem(destinoSelecionado, preco, dataInicio, dataFim);
         pacoteController.adicionarPacote(novoPacote);
 
         System.out.println("Pacote adicionado com sucesso!");
     }
 
-    private static void editarPacote() {
+    private static void editarPacote() throws TenteNovamenteException {
         System.out.println("\n----- Editar Pacote -----");
 
         if (pacoteController.listarPacotes().isEmpty()) {
@@ -646,6 +656,9 @@ public class Menu {
                 System.out.print("Nova Data de Início do Pacote (DD/MM/AAAA): ");
                 String novaDataInicioStr = scanner.nextLine();
                 LocalDate novaDataInicio = converterStringParaData(novaDataInicioStr);
+                if (!novaDataInicio.isBefore(pacoteSelecionado.getDataFim())) {
+                    throw new IntervaloDatasInvalidoException();
+                }
                 pacoteSelecionado.setDataInicio(novaDataInicio);
                 System.out.println("Data de Início do Pacote alterada com sucesso!");
                 break;
@@ -653,6 +666,9 @@ public class Menu {
                 System.out.print("Nova Data de Fim do Pacote (DD/MM/AAAA): ");
                 String novaDataFimStr = scanner.nextLine();
                 LocalDate novaDataFim = converterStringParaData(novaDataFimStr);
+                if (!pacoteSelecionado.getDataInicio().isBefore(novaDataFim)) {
+                    throw new IntervaloDatasInvalidoException();
+                }
                 pacoteSelecionado.setDataFim(novaDataFim);
                 System.out.println("Data de Fim do Pacote alterada com sucesso!");
                 break;
@@ -801,13 +817,12 @@ public class Menu {
 
     }
 
-    private static LocalDate converterStringParaData(String dataStr) {
+    private static LocalDate converterStringParaData(String dataStr) throws FormatoDataInvalidoException {
         try {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
             return LocalDate.parse(dataStr, formatter);
-        } catch (Exception e) {
-            System.out.println("Formato de data inválido. Use o formato DD/MM/AAAA.");
-            return null;
+        } catch (DateTimeParseException e) {
+            throw new FormatoDataInvalidoException();
         }
     }
 }
