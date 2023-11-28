@@ -12,6 +12,7 @@ import exceptions.EmailExistenteException;
 import exceptions.EmailsNaoCoincidemException;
 import exceptions.FormatoDataInvalidoException;
 import exceptions.IntervaloDatasInvalidoException;
+import exceptions.OpcaoInvalidaException;
 import exceptions.ReservaIndisponivelException;
 import exceptions.TenteNovamenteException;
 import view.*;
@@ -116,12 +117,8 @@ public class Menu {
                 case 2:
                     visualizarReservas();
                     break;
-                case 3:
-                    exibirOfertas();
-                    break;
                 case 0:
                     System.out.println("Saindo do menu de opções do usuário.");
-
                     break;
                 default:
                     System.out.println("Opção inválida. Tente novamente.");
@@ -173,9 +170,16 @@ public class Menu {
         // System.out.println("2 - Inserir Destino");
         System.out.println("0 - Voltar");
         System.out.print("Escolha uma opção: ");
-        int opcao = scanner.nextInt();
-
-        switch (opcao) {
+        int opcao;
+        try {
+            opcao = scanner.nextInt();
+        } catch (InputMismatchException e) {
+            opcao = -1;
+            scanner.nextLine();
+        }
+        
+        try {
+            switch (opcao) {
             case 1:
                 visualizarDestinosDisponiveisMenu();
                 break;
@@ -184,7 +188,11 @@ public class Menu {
                 break;
             default:
                 System.out.println("Opção inválida. Tente novamente.");
+            }
+        } catch(TenteNovamenteException e){
+        	System.out.println(e.getMessage());
         }
+        
     }
 
     private static void procurarPorCategoria() {
@@ -195,7 +203,14 @@ public class Menu {
         System.out.println("3 - Cultural");
         System.out.println("0 - Voltar");
         System.out.print("Escolha uma opção: ");
-        int opcao = scanner.nextInt();
+        int opcao;
+        try {
+            opcao = scanner.nextInt();
+        } catch (InputMismatchException e) {
+            opcao = -1;
+            scanner.nextLine();
+        }
+        
 
         switch (opcao) {
             case 1:
@@ -215,7 +230,7 @@ public class Menu {
         }
     }
 
-    private static void visualizarDestinosDisponiveisMenu() {
+    private static void visualizarDestinosDisponiveisMenu() throws TenteNovamenteException {
         List<IDestino> destinosDisponiveis = destinoController.destinosDisponiveis(pacoteController);
 
         System.out.println("\n--- Destinos Disponíveis ---");
@@ -224,29 +239,47 @@ public class Menu {
 
         System.out.println("Escolha o destino desejado: ");
 
-        int opcao = scanner.nextInt();
+        int opcao;
+        
+        try {
+            opcao = scanner.nextInt();
+        } catch (InputMismatchException e) {
+            opcao = -1;
+            scanner.nextLine();
+        }
 
-        IDestino destinoSelecionado = destinosDisponiveis.get(opcao - 1);
-        List<IPacoteViagem> pacotesDisponiveis = pacoteController.buscarPacotesDisponiveis(destinoSelecionado);
-
-        System.out.println("\n--- Pacotes Disponíveis - Destino " + destinoSelecionado.getNome() + " ---");
-        pacoteView.visualizarPacotes(pacotesDisponiveis);
-
-        System.out.println("Selecione um Pacote para Reserva (ou volte ao Menu selecionando 0)");
-
-        // todo - implementar exceção de quando o usuario colocar um numero não valido
-        // para acessar o pacote.
-        opcao = scanner.nextInt();
-        IPacoteViagem pacoteSelecionado = pacotesDisponiveis.get(opcao - 1);
-        if (opcao != 0) {
+        try {
+            IDestino destinoSelecionado = destinosDisponiveis.get(opcao - 1);
+            List<IPacoteViagem> pacotesDisponiveis = pacoteController.buscarPacotesDisponiveis(destinoSelecionado);
+            
+            System.out.println("\n--- Pacotes Disponíveis - Destino " + destinoSelecionado.getNome() + " ---");
+            
+            pacoteView.visualizarPacotes(pacotesDisponiveis);
+            
+            System.out.println("Selecione um Pacote para Reserva (ou volte ao Menu selecionando 0)");
+            
             try {
-                reservaController.reservarPacote(usuarioLogado, pacoteSelecionado);
-                System.out.println("Pacote para o usuário " + usuarioLogado + " com destino a "
-                        + pacotesDisponiveis.get(opcao - 1).getDestino().getNome() + " reservado com sucesso!");
-            } catch (ReservaIndisponivelException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
+                opcao = scanner.nextInt();
+            } catch (InputMismatchException e) {
+                opcao = -1;
+                scanner.nextLine();
             }
+            
+            IPacoteViagem pacoteSelecionado = pacotesDisponiveis.get(opcao - 1);
+            
+            if (opcao != 0) {
+                try {
+                    reservaController.reservarPacote(usuarioLogado, pacoteSelecionado);
+                    System.out.println("Pacote para o usuário " + usuarioLogado + " com destino a "
+                            + pacotesDisponiveis.get(opcao - 1).getDestino().getNome() + " reservado com sucesso!");
+                } catch (ReservaIndisponivelException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+                
+            }
+        } catch(IndexOutOfBoundsException e) {
+            throw new OpcaoInvalidaException();	
         }
     }
 
@@ -261,7 +294,15 @@ public class Menu {
 
         System.out.println("Selecione um Pacote para Reserva (ou volte ao Menu selecionando 0)");
 
-        int opcao = scanner.nextInt();
+        int opcao;
+        
+        try {
+            opcao = scanner.nextInt();
+        } catch (InputMismatchException e) {
+            opcao = -1;
+            scanner.nextLine();
+        }
+        
         IPacoteViagem pacoteSelecionado = pacotesDisponiveis.get(opcao - 1);
         if (opcao != 0) {
             try {
@@ -286,7 +327,15 @@ public class Menu {
 
         System.out.println("Selecione um Pacote para Reserva (ou volte ao Menu selecionando 0)");
 
-        int opcao = scanner.nextInt();
+        int opcao;
+        
+        try {
+            opcao = scanner.nextInt();
+        } catch (InputMismatchException e) {
+            opcao = -1;
+            scanner.nextLine();
+        }
+        
         IPacoteViagem pacoteSelecionado = pacotesDisponiveis.get(opcao - 1);
         if (opcao != 0) {
             try {
@@ -305,42 +354,18 @@ public class Menu {
         reservaView.visualizarReservas(reservaController.listarReservasUsuario(usuarioLogado));
     }
 
-    private static void exibirOfertas() {
-        System.out.println("\n----- Ofertas -----");
-        // Adicione aqui a lógica para exibir as ofertas disponíveis
-        // ...
-
-        // Exemplo de exibição de ofertas
-        System.out.println("1 - Oferta A");
-        System.out.println("2 - Oferta B");
-        System.out.println("3 - Oferta C");
-        System.out.print("Escolha uma oferta para mais detalhes (ou 0 para voltar): ");
-        int escolha = scanner.nextInt();
-
-        switch (escolha) {
-            case 1:
-                System.out.println("Detalhes da Oferta A");
-                break;
-            case 2:
-                System.out.println("Detalhes da Oferta B");
-                break;
-            case 3:
-                System.out.println("Detalhes da Oferta C");
-                break;
-            case 0:
-                System.out.println("Voltando ao menu principal.");
-                break;
-            default:
-                System.out.println("Opção inválida. Voltando ao menu principal.");
-        }
-    }
-
+    
     public static void menuOpcoesAdministrativas() {
         int escolha;
         do {
             exibirMenu();
             // Ler a escolha do usuário
-            escolha = scanner.nextInt();
+            try {
+                escolha = scanner.nextInt();
+            } catch (InputMismatchException e) {
+                escolha = -1;
+                scanner.nextLine();
+            }
             scanner.nextLine(); // Consumir a quebra de linha após o número
 
             // Executar a opção escolhida
@@ -386,7 +411,13 @@ public class Menu {
             System.out.println("4 - Remover Destino");
             System.out.println("0 - Voltar ao Menu Administrativo");
             System.out.print("Escolha uma opção: ");
-            opcao = scanner.nextInt();
+            
+            try {
+                opcao = scanner.nextInt();
+            } catch (InputMismatchException e) {
+                opcao = -1;
+                scanner.nextLine();
+            }
             scanner.nextLine(); // Consumir a quebra de linha após o número
 
             switch (opcao) {
@@ -429,7 +460,15 @@ public class Menu {
         destinoView.visualizarCategorias(categoriasDisponiveis);
 
         System.out.print("Escolha a Categoria: ");
-        int opcao = scanner.nextInt();
+        int opcao;
+        
+        try {
+            opcao = scanner.nextInt();
+        } catch (InputMismatchException e) {
+            opcao = -1;
+            scanner.nextLine();
+        }
+        
         CategoriaDestino categoria = categoriasDisponiveis.get(opcao - 1);
         Destino novoDestino = new Destino(nome, descricao, categoria);
         destinoController.adicionarDestino(novoDestino);
@@ -450,7 +489,15 @@ public class Menu {
         destinoView.visualizarDestinos(destinos);
 
         System.out.print("Escolha o número do Destino que deseja editar: ");
-        int numeroDestino = scanner.nextInt();
+        int numeroDestino;
+        
+        try {
+            numeroDestino = scanner.nextInt();
+        } catch (InputMismatchException e) {
+            numeroDestino = -1;
+            scanner.nextLine();
+        }
+        
         scanner.nextLine(); // Consumir a quebra de linha após o número
 
         if (numeroDestino < 1 || numeroDestino > destinos.size()) {
@@ -466,7 +513,15 @@ public class Menu {
         System.out.println("0 - Voltar");
 
         System.out.print("Escolha uma opção: ");
-        int opcaoEdicao = scanner.nextInt();
+        int opcaoEdicao;
+        
+        try {
+            opcaoEdicao = scanner.nextInt();
+        } catch (InputMismatchException e) {
+            opcaoEdicao = -1;
+            scanner.nextLine();
+        }
+        
         scanner.nextLine(); // Consumir a quebra de linha após o número
 
         switch (opcaoEdicao) {
@@ -497,7 +552,15 @@ public class Menu {
         destinoView.visualizarDestinos(destinos);
 
         System.out.print("Escolha o número do Destino que deseja remover: ");
-        int numeroDestino = scanner.nextInt();
+        int numeroDestino;
+        
+        try {
+            numeroDestino = scanner.nextInt();
+        } catch (InputMismatchException e) {
+            numeroDestino = -1;
+            scanner.nextLine();
+        }
+        
         scanner.nextLine(); // Consumir a quebra de linha após o número
 
         if (numeroDestino < 1 || numeroDestino > destinos.size()) {
@@ -521,7 +584,14 @@ public class Menu {
             System.out.println("4 - Remover Pacote");
             System.out.println("0 - Voltar ao Menu Administrativo");
             System.out.print("Escolha uma opção: ");
-            opcao = scanner.nextInt();
+            
+            try {
+                opcao = scanner.nextInt();
+            } catch (InputMismatchException e) {
+                opcao = -1;
+                scanner.nextLine();
+            }
+            
             scanner.nextLine(); // Consumir a quebra de linha após o número
 
             try {
@@ -569,7 +639,15 @@ public class Menu {
 
         System.out.print("Escolha o número do Destino para o Pacote: ");
 
-        int numeroDestino = scanner.nextInt();
+        int numeroDestino;
+        
+        try {
+            numeroDestino = scanner.nextInt();
+        } catch (InputMismatchException e) {
+            numeroDestino = -1;
+            scanner.nextLine();
+        }
+        
         scanner.nextLine(); // Consumir a quebra de linha após o número
 
         if (numeroDestino < 1 || numeroDestino > destinos.size()) {
@@ -615,7 +693,14 @@ public class Menu {
         pacoteView.visualizarPacotes(pacotes);
 
         System.out.print("Escolha o número do Pacote que deseja editar: ");
-        int numeroPacote = scanner.nextInt();
+        int numeroPacote;
+        
+        try {
+            numeroPacote = scanner.nextInt();
+        } catch (InputMismatchException e) {
+            numeroPacote = -1;
+            scanner.nextLine();
+        }
         scanner.nextLine(); // Consumir a quebra de linha após o número
 
         if (numeroPacote < 1 || numeroPacote > pacotes.size()) {
@@ -632,7 +717,14 @@ public class Menu {
         System.out.println("0 - Voltar");
 
         System.out.print("Escolha uma opção: ");
-        int opcaoEdicao = scanner.nextInt();
+        int opcaoEdicao;
+        
+        try {
+            opcaoEdicao = scanner.nextInt();
+        } catch (InputMismatchException e) {
+            opcaoEdicao = -1;
+            scanner.nextLine();
+        }
         scanner.nextLine(); // Consumir a quebra de linha após o número
 
         switch (opcaoEdicao) {
@@ -640,7 +732,14 @@ public class Menu {
                 System.out.println("Destinos Disponíveis:");
                 List<IDestino> destinos = destinoController.listarDestinos();
                 System.out.print("Escolha o número do Novo Destino para o Pacote: ");
-                int numeroNovoDestino = scanner.nextInt();
+                int numeroNovoDestino;
+                
+                try {
+                	numeroNovoDestino = scanner.nextInt();
+                } catch (InputMismatchException e) {
+                    numeroNovoDestino = -1;
+                    scanner.nextLine();
+                }
                 scanner.nextLine(); // Consumir a quebra de linha após o número
 
                 if (numeroNovoDestino < 1 || numeroNovoDestino > destinos.size()) {
@@ -691,7 +790,15 @@ public class Menu {
         System.out.println("Pacotes Disponíveis:");
 
         System.out.print("Escolha o número do Pacote que deseja remover: ");
-        int numeroPacote = scanner.nextInt();
+        int numeroPacote;
+        
+        try {
+        	numeroPacote = scanner.nextInt();
+        } catch (InputMismatchException e) {
+            numeroPacote = -1;
+            scanner.nextLine();
+        }
+        
         scanner.nextLine(); // Consumir a quebra de linha após o número
 
         if (numeroPacote < 1 || numeroPacote > pacotes.size()) {
@@ -715,7 +822,14 @@ public class Menu {
             System.out.println("4 - Tornar Administrador");
             System.out.println("0 - Voltar ao Menu Administrativo");
             System.out.print("Escolha uma opção: ");
-            opcao = scanner.nextInt();
+            
+            try {
+            	opcao = scanner.nextInt();
+            } catch (InputMismatchException e) {
+                opcao = -1;
+                scanner.nextLine();
+            }
+            
             scanner.nextLine(); // Consumir a quebra de linha após o número
 
             switch (opcao) {
