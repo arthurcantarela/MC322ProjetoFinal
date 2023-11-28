@@ -144,7 +144,8 @@ public class Menu {
                 scanner.nextLine();
             }
 
-            switch (opcao) {
+            try {
+            	switch (opcao) {
                 case 1:
                     procurarPorDestino();
                     break;
@@ -160,6 +161,9 @@ public class Menu {
                 default:
                     System.out.println("Opção inválida. Tente novamente.");
             }
+    	} catch(TenteNovamenteException e) {
+    		System.out.println(e.getMessage());
+    	}
 
         } while (opcao != 0);
     }
@@ -212,7 +216,8 @@ public class Menu {
         }
         
 
-        switch (opcao) {
+        try {
+            switch (opcao) {
             case 1:
                 exibirPacotesPorCategoria(CategoriaDestino.AVENTURA);
                 break;
@@ -227,7 +232,10 @@ public class Menu {
                 break;
             default:
                 System.out.println("Opção inválida. Tente novamente.");
-        }
+        } 
+    } catch(TenteNovamenteException e) {
+    	System.out.println(e.getMessage());
+    	}
     }
 
     private static void visualizarDestinosDisponiveisMenu() throws TenteNovamenteException {
@@ -265,6 +273,11 @@ public class Menu {
                 scanner.nextLine();
             }
             
+            if(opcao == 0) {
+            	System.out.println("Retornando ao Menu...");
+            	return;
+            }
+            
             IPacoteViagem pacoteSelecionado = pacotesDisponiveis.get(opcao - 1);
             
             if (opcao != 0) {
@@ -283,7 +296,7 @@ public class Menu {
         }
     }
 
-    private static void procurarPorPrecoMaximo() {
+    private static void procurarPorPrecoMaximo() throws OpcaoInvalidaException {
         System.out.print("Digite o preço máximo desejado: ");
         double precoMaximo = scanner.nextDouble();
         List<IPacoteViagem> pacotesDisponiveis = pacoteController.buscarPacotesDisponiveis(precoMaximo);
@@ -303,21 +316,31 @@ public class Menu {
             scanner.nextLine();
         }
         
-        IPacoteViagem pacoteSelecionado = pacotesDisponiveis.get(opcao - 1);
-        if (opcao != 0) {
-            try {
-                reservaController.reservarPacote(usuarioLogado, pacoteSelecionado);
-                System.out.println("Pacote para o usuário " + usuarioLogado + " com destino a "
-                        + pacotesDisponiveis.get(opcao - 1).getDestino().getNome() + " reservado com sucesso!");
-            } catch (ReservaIndisponivelException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
+        if(opcao == 0) {
+        	System.out.println("Retornando ao Menu...");
+        	return;
+        }
+        
+        try {
+            IPacoteViagem pacoteSelecionado = pacotesDisponiveis.get(opcao - 1);
+            if (opcao != 0) {
+                try {
+                    reservaController.reservarPacote(usuarioLogado, pacoteSelecionado);
+                    System.out.println("Pacote para o usuário " + usuarioLogado + " com destino a "
+                            + pacotesDisponiveis.get(opcao - 1).getDestino().getNome() + " reservado com sucesso!");
+                } catch (ReservaIndisponivelException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+            } 
+            
+        } catch(IndexOutOfBoundsException e) {
+        	throw new OpcaoInvalidaException();
         }
 
     }
 
-    private static void exibirPacotesPorCategoria(CategoriaDestino categoria) {
+    private static void exibirPacotesPorCategoria(CategoriaDestino categoria) throws OpcaoInvalidaException {
 
         List<IPacoteViagem> pacotesDisponiveis = pacoteController.buscarPacotesDisponiveis(categoria);
 
@@ -336,17 +359,27 @@ public class Menu {
             scanner.nextLine();
         }
         
-        IPacoteViagem pacoteSelecionado = pacotesDisponiveis.get(opcao - 1);
-        if (opcao != 0) {
-            try {
-                reservaController.reservarPacote(usuarioLogado, pacoteSelecionado);
-                System.out.println("Pacote para o usuário " + usuarioLogado + " com destino a "
-                        + pacotesDisponiveis.get(opcao - 1).getDestino().getNome() + " reservado com sucesso!");
-            } catch (ReservaIndisponivelException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
+        if(opcao == 0) {
+        	System.out.println("Retornando ao Menu...");
+        	return;
         }
+        
+        try {
+
+            IPacoteViagem pacoteSelecionado = pacotesDisponiveis.get(opcao - 1);
+            if (opcao != 0) {
+                try {
+                    reservaController.reservarPacote(usuarioLogado, pacoteSelecionado);
+                    System.out.println("Pacote para o usuário " + usuarioLogado + " com destino a "
+                            + pacotesDisponiveis.get(opcao - 1).getDestino().getNome() + " reservado com sucesso!");
+                } catch (ReservaIndisponivelException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+            }
+        } catch (IndexOutOfBoundsException e) {
+        	throw new OpcaoInvalidaException();
+        }	
     }
 
     private static void visualizarReservas() {

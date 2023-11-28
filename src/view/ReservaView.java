@@ -9,7 +9,7 @@ public class ReservaView implements IReservaView{
 	@Override
 	public void visualizarReservas(List<IReserva> reservas) {
 		for(IReserva reserva: reservas) {
-			pacoteView.visualizarPacotes(reserva.getPacote());
+			pacoteView.visualizarPacote(reserva.getPacote());
 		}
 		
 	}
