@@ -1,29 +1,32 @@
 package view;
 
-
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import model.*;
 
-public class PacoteView implements IPacoteView{
+public class PacoteView implements IPacoteView {
 
 	@Override
-    public void visualizarPacotes(IPacoteViagem pacote) {
-    	System.out.println("Destino: " + pacote.getDestino().getNome());
-    	System.out.println("Categoria: " + pacote.getDestino().getCategoria());
-        System.out.println("Preço: R$ " + pacote.getPreco());
-        System.out.println("Data de Início: " + pacote.getDataInicio());
-        System.out.println("Data de Fim: " + pacote.getDataFim());
-        System.out.println();
-    }
-	
-	public void visualizarPacotes(List <IPacoteViagem> pacotes) {
-		int j = 0;
-        for (IPacoteViagem pacote : pacotes ) {
-        	j++;
-        	System.out.println("Pacote " + j + ": ");
-        	visualizarPacotes(pacote);
-        }
+	public void visualizarPacote(IPacoteViagem pacote) {
+		System.out.println("\tDestino: " + pacote.getDestino().getNome());
+		System.out.println("\tCategoria: " + pacote.getDestino().getCategoria());
+		System.out.println("\tPreço: R$ " + pacote.getPreco());
+		System.out
+				.println("\tData de Início: "
+						+ pacote.getDataInicio().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+		System.out.println("\tData de Fim: " + pacote.getDataFim().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+		System.out.println();
 	}
-	
+
+	@Override
+	public void visualizarPacotes(List<IPacoteViagem> pacotes) {
+		int j = 0;
+		for (IPacoteViagem pacote : pacotes) {
+			j++;
+			System.out.println("Pacote " + j + ": ");
+			visualizarPacote(pacote);
+		}
+	}
+
 }
