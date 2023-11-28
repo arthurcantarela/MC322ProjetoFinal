@@ -7,6 +7,7 @@ public class PacoteViagem implements IPacoteViagem {
     private double preco;
     private IUsuario usuario;
     private LocalDate dataInicio;
+    
     @Override
 	public void setDestino(IDestino destino) {
 		// TODO Auto-generated method stub

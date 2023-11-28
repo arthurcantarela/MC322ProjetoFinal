@@ -28,8 +28,8 @@ public class Menu {
     public static IReservaView reservaView = new ReservaView();
     public static IPacoteController pacoteController = new PacoteController();
     public static IDestinoController destinoController = new DestinoController();
-    public static IReservaController reservaController = new ReservaController();
     public static IUsuarioController usuarioController = new UsuarioController();
+    public static IReservaController reservaController = new ReservaController();
 
     private static IUsuario usuarioLogado;
 
